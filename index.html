@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Football Roster Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f5f5f0;
+      --surface: #ffffff;
+      --primary: #1a5f2a;
+      --secondary: #2d4a35;
+      --accent: #d4af37;
+      --text: #1a1a1a;
+      --text-secondary: #5a5a5a;
+      --border: #e0e0e0;
+      --shadow: rgba(0,0,0,0.1);
+    }
+
+    [data-theme="dark"] {
+      --bg: #121212;
+      --surface: #1e1e1e;
+      --primary: #3d8b40;
+      --secondary: #5a7d5a;
+      --accent: #f0c850;
+      --text: #f0f0f0;
+      --text-secondary: #a0a0a0;
+      --border: #333333;
+      --shadow: rgba(0,0,0,0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo svg {
+      width: 36px;
+      height: 36px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .theme-toggle {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--primary);
+    }
+
+    .theme-toggle svg {
+      width: 22px;
+      height: 22px;
+      fill: var(--accent);
+    }
+
+    .container {
+      display: flex;
+      gap: 24px;
+      padding: 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .search-panel {
+      width: 320px;
+      flex-shrink: 0;
+    }
+
+    .search-box {
+      position: relative;
+      margin-bottom: 16px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 14px 14px 14px 44px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-size: 1rem;
+      font-family: inherit;
+      background: var(--surface);
+      color: var(--text);
+      transition: border-color 0.2s;
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .search-box svg {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      fill: var(--text-secondary);
+    }
+
+    .search-results {
+      background: var(--surface);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .search-result-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      cursor: pointer;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+
+    .search-result-item:last-child {
+      border-bottom: none;
+    }
+
+    .search-result-item:hover {
+      background: var(--bg);
+    }
+
+    .search-result-item img {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: var(--bg);
+    }
+
+    .player-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .player-name {
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .player-meta {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .position-badge {
+      background: var(--primary);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .rating-badge {
+      background: var(--accent);
+      color: var(--text);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .search-message {
+      padding: 16px;
+      text-align: center;
+      color: var(--text-secondary);
+    }
+
+    .add-custom-btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .add-custom-btn:hover {
+      opacity: 0.9;
+    }
+
+    .roster-panel {
+      flex: 1;
+    }
+
+    .roster-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .roster-header h2 {
+      font-size: 1.25rem;
+    }
+
+    .roster-count {
+      background: var(--primary);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .roster-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .player-card {
+      background: var(--surface);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 16px;
+      position: relative;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .player-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px var(--shadow);
+    }
+
+    .player-card .remove-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: none;
+      background: var(--bg);
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s, background 0.2s;
+    }
+
+    .player-card:hover .remove-btn {
+      opacity: 1;
+    }
+
+    .player-card .remove-btn:hover {
+      background: #e74c3c;
+      color: white;
+    }
+
+    .player-card img {
+      width: 80px;
+      height: 80px;
+      border-radius: 8px;
+      object-fit: cover;
+      margin-bottom: 12px;
+      background: var(--bg);
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .player-card .card-name {
+      font-weight: 600;
+      font-size: 1.1rem;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    .player-card .card-position {
+      text-align: center;
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .player-card .card-meta {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .player-card .card-extra {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    .player-card .card-rating {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: var(--accent);
+      color: var(--text);
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .empty-slot {
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      min-height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+
+    .roster-empty {
+      text-align: center;
+      padding: 48px;
+      color: var(--text-secondary);
+    }
+
+    .roster-full {
+      background: var(--accent);
+      color: var(--text);
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s, visibility 0.2s;
+      z-index: 100;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: var(--surface);
+      border-radius: 16px;
+      padding: 24px;
+      width: 100%;
+      max-width: 400px;
+      transform: scale(0.9);
+      transition: transform 0.2s;
+    }
+
+    .modal-overlay.active .modal {
+      transform: scale(1);
+    }
+
+    .modal h3 {
+      margin-bottom: 20px;
+      font-size: 1.25rem;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+      font-size: 0.875rem;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .modal-buttons button {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .btn-cancel {
+      background: var(--bg);
+      border: 2px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-save {
+      background: var(--primary);
+      border: none;
+      color: white;
+    }
+
+    @media (max-width: 1024px) {
+      .roster-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .search-panel {
+        width: 100%;
+      }
+
+      .roster-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .roster-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .club-logo {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        <path d="M2 12h20"/>
+      </svg>
+      <h1>Football Roster</h1>
+    </div>
+    <button class="theme-toggle" id="themeToggle">
+      <svg class="sun-icon" viewBox="0 0 24 24">
+        <path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0-5a1 1 0 0 0 1 1h1a1 1 0 0 0 0-2h-1a1 1 0 0 0-1 1zm9.07 1.93a1 1 0 0 0-1.41 0l.7.71a1 1 0 1 0 1.42-1.42l-.71.7zm-9.42 9.42a1 1 0 0 0 0 1.42l.71.7a1 1 0 1 0 1.42-1.42l-.71-.7a1 1 0 0 0-1.42 0zM12 21a1 1 0 0 0 1-1v-1a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1zm-7-7a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1zm14 0a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1z"/>
+      </svg>
+      <svg class="moon-icon" style="display:none" viewBox="0 0 24 24">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
+  </header>
+
+  <div class="container">
+    <div class="search-panel">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0z"/></svg>
+        <input type="text" id="searchInput" placeholder="Search players...">
+      </div>
+      <div class="search-results" id="searchResults"></div>
+    </div>
+
+    <div class="roster-panel">
+      <div class="roster-header">
+        <h2>Your Roster</h2>
+        <span class="roster-count"><span id="rosterCount">0</span>/11</span>
+      </div>
+      <div id="rosterFullMessage" style="display:none" class="roster-full">
+        Roster is full! Remove a player to add more.
+      </div>
+      <div class="roster-grid" id="rosterGrid"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h3>Add Custom Player</h3>
+      <form id="customPlayerForm">
+        <div class="form-group">
+          <label for="playerName">Name *</label>
+          <input type="text" id="playerName" required placeholder="Enter player name">
+        </div>
+        <div class="form-group">
+          <label for="playerPosition">Position</label>
+          <select id="playerPosition">
+            <option value="GK">GK</option>
+            <option value="CB">CB</option>
+            <option value="LB">LB</option>
+            <option value="RB">RB</option>
+            <option value="CDM">CDM</option>
+            <option value="CM">CM</option>
+            <option value="CAM">CAM</option>
+            <option value="LM">LM</option>
+            <option value="RM">RM</option>
+            <option value="LW">LW</option>
+            <option value="RW">RW</option>
+            <option value="ST">ST</option>
+            <option value="CF">CF</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="playerRating">Rating (1-99)</label>
+          <input type="number" id="playerRating" min="1" max="99" value="70">
+        </div>
+        <div class="form-group">
+          <label for="playerClub">Club</label>
+          <input type="text" id="playerClub" placeholder="Enter club name">
+        </div>
+        <div class="form-group">
+          <label for="playerNationality">Nationality</label>
+          <input type="text" id="playerNationality" placeholder="Enter nationality">
+        </div>
+        <div class="modal-buttons">
+          <button type="button" class="btn-cancel" id="cancelBtn">Cancel</button>
+          <button type="submit" class="btn-save">Add Player</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const FOTMOB_API = 'https://corsproxy.io/?' + encodeURIComponent('https://www.fotmob.com/api/data/search/suggest?hits=50&lang=en&term=');
+    const FOTMOB_PLAYER_API_BASE = 'https://corsproxy.io/?' + encodeURIComponent('https://www.fotmob.com/api/data/playerData?id=');
+    const MAX_ROSTER = 11;
+
+    let roster = [];
+    let searchTimeout = null;
+
+    const searchInput = document.getElementById('searchInput');
+    const searchResults = document.getElementById('searchResults');
+    const rosterGrid = document.getElementById('rosterGrid');
+    const rosterCount = document.getElementById('rosterCount');
+    const rosterFullMessage = document.getElementById('rosterFullMessage');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const customPlayerForm = document.getElementById('customPlayerForm');
+    const themeToggle = document.getElementById('themeToggle');
+    const cancelBtn = document.getElementById('cancelBtn');
+
+    function init() {
+      loadTheme();
+      loadRoster();
+      renderRoster();
+      setupEventListeners();
+    }
+
+    function loadTheme() {
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      updateThemeIcon(savedTheme);
+    }
+
+    function updateThemeIcon(theme) {
+      const sunIcon = document.querySelector('.sun-icon');
+      const moonIcon = document.querySelector('.moon-icon');
+      if (theme === 'dark') {
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'block';
+      } else {
+        sunIcon.style.display = 'block';
+        moonIcon.style.display = 'none';
+      }
+    }
+
+    function setupEventListeners() {
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateThemeIcon(newTheme);
+      });
+
+      searchInput.addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        const query = e.target.value.trim();
+        if (query.length < 2) {
+          searchResults.innerHTML = '';
+          return;
+        }
+        searchTimeout = setTimeout(() => searchPlayers(query), 300);
+      });
+
+      cancelBtn.addEventListener('click', closeModal);
+      customPlayerForm.addEventListener('submit', handleCustomPlayer);
+      modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) closeModal();
+      });
+    }
+
+    async function searchPlayers(query) {
+      try {
+        const response = await fetch(`${FOTMOB_API}${encodeURIComponent(query)}`);
+        const data = await response.json();
+        
+        const players = data[0]?.suggestions?.filter(s => s.type === 'player') || [];
+        
+        if (players.length > 0) {
+          renderSearchResults(players);
+        } else {
+          renderNoResults(query);
+        }
+      } catch (error) {
+        searchResults.innerHTML = '<div class="search-message">Unable to search players</div>';
+      }
+    }
+
+    function renderSearchResults(players) {
+      searchResults.innerHTML = players.map(player => `
+        <div class="search-result-item" onclick="addPlayerFromApi(${JSON.stringify(player).replace(/"/g, '&quot;')})">
+          <img src="https://images.fotmob.com/image_resources/playerimages/${player.id}.png" alt="${player.name}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2240%22 fill=%22%23ddd%22/><text x=%2250%22 y=%2255%22 text-anchor=%22middle%22 font-size=%2230%22>⚽</text></svg>'">
+          <div class="player-info">
+            <div class="player-name">${player.name}</div>
+            <div class="player-meta">
+              <span class="position-badge">-</span>
+              <span>${player.teamName || 'Free Agent'}</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderNoResults(query) {
+      searchResults.innerHTML = `
+        <div class="search-message">No players found for "${query}"</div>
+        <button class="add-custom-btn" onclick="openModal('${query}')">Add Custom Player</button>
+      `;
+    }
+
+    async function addPlayerFromApi(player) {
+      if (roster.length >= MAX_ROSTER) {
+        rosterFullMessage.style.display = 'block';
+        return;
+      }
+      rosterFullMessage.style.display = 'none';
+
+      searchResults.innerHTML = '<div class="search-message">Loading player data...</div>';
+
+      try {
+        const response = await fetch(`${FOTMOB_PLAYER_API_BASE}${player.id}`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        
+        const data = await response.json();
+
+        let position = '-';
+        let rating = 75;
+        
+        if (data.positionDescription) {
+          if (data.positionDescription.positions && data.positionDescription.positions.length > 0) {
+            const mainPos = data.positionDescription.positions.find(p => p.isMainPosition) || data.positionDescription.positions[0];
+            position = mainPos.strPos?.label || mainPos.strPosShort?.label || '-';
+          } else if (data.positionDescription.primaryPosition) {
+            position = data.positionDescription.primaryPosition.label || '-';
+          }
+        }
+        
+        if (data.mainLeague?.stats) {
+          const ratingStat = data.mainLeague.stats.find(s => s.localizedTitleId === 'rating');
+          if (ratingStat) rating = Math.round(ratingStat.value);
+        }
+        
+        const teamName = data.primaryTeam?.teamName || player.teamName || 'Free Agent';
+        
+        let age = null;
+        let nationality = null;
+        let value = null;
+        
+        if (data.playerInformation) {
+          data.playerInformation.forEach(info => {
+            if (info.translationKey === 'age_sentencecase' && info.value) {
+              age = info.value.numberValue || info.value.fallback || null;
+            } else if (info.translationKey === 'country_sentencecase' && info.value) {
+              nationality = info.value.fallback || null;
+            } else if (info.translationKey === 'transfer_value' && info.value) {
+              value = info.value.fallback || null;
+            }
+          });
+        }
+
+        roster.push({
+          id: 'api-' + player.id,
+          name: data.name || player.name,
+          position: position,
+          rating: rating,
+          club: teamName,
+          clubSrc: null,
+          nationality: nationality,
+          age: age,
+          value: value,
+          imgSrc: `https://images.fotmob.com/image_resources/playerimages/${player.id}.png`,
+          isCustom: false
+        });
+      } catch (error) {
+        console.error('Error fetching player data:', error);
+        roster.push({
+          id: 'api-' + player.id,
+          name: player.name,
+          position: '-',
+          rating: 75,
+          club: player.teamName || 'Free Agent',
+          clubSrc: null,
+          nationality: null,
+          age: null,
+          value: null,
+          imgSrc: `https://images.fotmob.com/image_resources/playerimages/${player.id}.png`,
+          isCustom: false
+        });
+      }
+
+      saveRoster();
+      renderRoster();
+      searchInput.value = '';
+      searchResults.innerHTML = '';
+    }
+
+    function openModal(prefillName = '') {
+      document.getElementById('playerName').value = prefillName;
+      document.getElementById('playerRating').value = 70;
+      modalOverlay.classList.add('active');
+    }
+
+    function closeModal() {
+      modalOverlay.classList.remove('active');
+      customPlayerForm.reset();
+    }
+
+    function handleCustomPlayer(e) {
+      e.preventDefault();
+      
+      const nameInput = document.getElementById('playerName');
+      const name = nameInput.value.trim();
+      const capitalizedName = name.charAt(0).toUpperCase() + name.slice(1);
+      
+      if (roster.length >= MAX_ROSTER) {
+        rosterFullMessage.style.display = 'block';
+        return;
+      }
+      rosterFullMessage.style.display = 'none';
+
+      roster.push({
+        id: 'custom-' + Date.now(),
+        name: capitalizedName,
+        position: document.getElementById('playerPosition').value,
+        rating: parseInt(document.getElementById('playerRating').value) || 70,
+        club: document.getElementById('playerClub').value || 'Free Agent',
+        nationality: document.getElementById('playerNationality').value || 'Unknown',
+        isCustom: true
+      });
+
+      saveRoster();
+      renderRoster();
+      closeModal();
+      searchInput.value = '';
+      searchResults.innerHTML = '';
+    }
+
+    function removePlayer(index) {
+      roster.splice(index, 1);
+      if (roster.length < MAX_ROSTER) {
+        rosterFullMessage.style.display = 'none';
+      }
+      saveRoster();
+      renderRoster();
+    }
+
+    function renderRoster() {
+      rosterCount.textContent = roster.length;
+      
+      if (roster.length === 0) {
+        rosterGrid.innerHTML = '<div class="roster-empty">Your roster is empty. Search for players to add them!</div>';
+        return;
+      }
+
+      let html = roster.map((player, index) => `
+        <div class="player-card">
+          <button class="remove-btn" onclick="removePlayer(${index})">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 6L6 18M6 6l12 12"></path>
+            </svg>
+          </button>
+          <div class="card-rating">${player.rating}</div>
+          <img src="${player.imgSrc || ''}" alt="${player.name}" onerror="this.style.display='none'">
+          <div class="card-name">${player.name}</div>
+          <div class="card-position">${player.position}</div>
+          <div class="card-meta">
+            <span>${player.club || 'Free Agent'}</span>
+          </div>
+          <div class="card-extra">
+            ${player.nationality ? `<span>${player.nationality}</span>` : ''}
+            ${player.age ? `<span>${player.age} yrs</span>` : ''}
+            ${player.value ? `<span>${player.value}</span>` : ''}
+          </div>
+        </div>
+      `).join('');
+
+      const emptySlots = MAX_ROSTER - roster.length;
+      for (let i = 0; i < emptySlots; i++) {
+        html += '<div class="empty-slot">Empty Slot</div>';
+      }
+
+      rosterGrid.innerHTML = html;
+    }
+
+    function saveRoster() {
+      localStorage.setItem('footballRoster', JSON.stringify(roster));
+    }
+
+    function loadRoster() {
+      const saved = localStorage.getItem('footballRoster');
+      if (saved) {
+        try {
+          roster = JSON.parse(saved);
+        } catch (e) {
+          roster = [];
+        }
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
