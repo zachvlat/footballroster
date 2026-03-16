@@ -3,11 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Football Roster · drag & drop groups</title>
+  <title>Football Roster · drag & drop on pitch</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    /* === reset & variables === */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
       --bg: #f5f5f0;
       --surface: #ffffff;
@@ -18,6 +20,8 @@
       --text-secondary: #5a5a5a;
       --border: #e0e0e0;
       --shadow: rgba(0,0,0,0.1);
+      --pitch-green: #2c5e2e;
+      --pitch-line: #ffffff;
     }
     [data-theme="dark"] {
       --bg: #121212;
@@ -29,8 +33,9 @@
       --text-secondary: #a0a0a0;
       --border: #333333;
       --shadow: rgba(0,0,0,0.3);
+      --pitch-green: #1e3a1e;
+      --pitch-line: #a0a0a0;
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Outfit', sans-serif;
       background: var(--bg);
@@ -38,6 +43,7 @@
       min-height: 100vh;
       transition: background 0.3s, color 0.3s;
     }
+    /* === header === */
     header {
       display: flex;
       justify-content: space-between;
@@ -47,7 +53,7 @@
       border-bottom: 1px solid var(--border);
     }
     .logo { display: flex; align-items: center; gap: 12px; }
-    .logo svg { width: 32px; height: 32px; }
+    .logo svg { width: 32px; height: 32px; stroke: var(--primary); }
     h1 { font-size: 1.4rem; font-weight: 700; color: var(--primary); }
     .theme-toggle {
       background: var(--surface); border: 2px solid var(--border); border-radius: 50%;
@@ -55,7 +61,7 @@
       justify-content: center; transition: all 0.3s;
     }
     .theme-toggle:hover { border-color: var(--primary); }
-    .theme-toggle svg { width: 22px; height: 22px; fill: var(--accent); }
+    .theme-toggle svg { width: 22px; height: 22px; fill: var(--accent); stroke: none; }
     .header-actions { display: flex; gap: 8px; }
     .header-btn {
       background: var(--surface); border: 2px solid var(--border); border-radius: 8px;
@@ -65,9 +71,10 @@
     .header-btn:hover { border-color: var(--primary); }
     .header-btn svg { width: 18px; height: 18px; fill: var(--text); }
     #importFileInput { display: none; }
+    /* === main layout === */
     .container { display: flex; gap: 24px; padding: 20px; max-width: 1600px; margin: 0 auto; }
-    .search-panel { width: 300px; flex-shrink: 0; }
-    .search-box { position: relative; margin-bottom: 16px; }
+    .search-panel { width: 500px; flex-shrink: 0; display: flex; flex-direction: column; gap: 16px; }
+    .search-box { position: relative; }
     .search-box input {
       width: 100%; padding: 12px 12px 12px 42px; border: 2px solid var(--border);
       border-radius: 12px; font-size: 1rem; background: var(--surface); color: var(--text);
@@ -79,7 +86,7 @@
     }
     .search-results {
       background: var(--surface); border-radius: 12px; border: 1px solid var(--border);
-      max-height: 400px; overflow-y: auto;
+      max-height: 300px; overflow-y: auto;
     }
     .search-result-item {
       display: flex; align-items: center; gap: 10px; padding: 10px; cursor: pointer;
@@ -95,175 +102,207 @@
       display: block; width: 100%; padding: 10px; margin-top: 8px; background: var(--primary);
       color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;
     }
+
+    /* === VERTICAL PITCH for drag & drop === */
+    .pitch-container {
+      background: var(--surface);
+      border-radius: 16px;
+      border: 2px solid var(--border);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .pitch-title {
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .pitch-title svg {
+      width: 18px;
+      height: 18px;
+      fill: var(--accent);
+    }
+    .vertical-pitch {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 68/100; /* width/height ratio for vertical pitch */
+      background: var(--pitch-green);
+      border: 3px solid var(--pitch-line);
+      border-radius: 8px;
+      box-shadow: 0 8px 16px var(--shadow);
+      cursor: pointer;
+      overflow: visible;
+    }
+    /* Pitch markings */
+    .pitch-markings {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .pitch-markings svg {
+      width: 100%;
+      height: 100%;
+      stroke: var(--pitch-line);
+      stroke-width: 2;
+      fill: none;
+    }
+    .pitch-markings svg line,
+    .pitch-markings svg circle,
+    .pitch-markings svg rect {
+      stroke: var(--pitch-line);
+    }
+    /* Drop zones on pitch */
+    .pitch-drop-zones {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      z-index: 5;
+    }
+    .pitch-row {
+      display: flex;
+      flex: 1;
+      width: 100%;
+    }
+    .pitch-cell {
+      flex: 1;
+      border: 1px dashed rgba(255,255,255,0.2);
+      transition: background 0.2s;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .pitch-cell.drag-over {
+      background: rgba(212, 175, 55, 0.3);
+      border: 2px solid var(--accent);
+    }
+    /* Player on pitch */
+    .pitch-player {
+      background: var(--surface);
+      border-radius: 30px;
+      padding: 4px 8px 4px 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      border: 2px solid var(--primary);
+      box-shadow: 0 2px 8px var(--shadow);
+      cursor: grab;
+      max-width: 90%;
+      pointer-events: all;
+      z-index: 10;
+      position: relative;
+    }
+    .pitch-player:active {
+      cursor: grabbing;
+      opacity: 0.8;
+    }
+    .pitch-player.dragging {
+      opacity: 0.4;
+    }
+    .pitch-player img {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: var(--bg);
+    }
+    .pitch-player .remove-mini {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      cursor: pointer;
+      margin-left: 2px;
+    }
+    .pitch-player .remove-mini:hover {
+      background: #e74c3c;
+      color: white;
+    }
+    .pitch-row-label {
+      position: absolute;
+      left: 2px;
+      top: 2px;
+      font-size: 0.6rem;
+      color: var(--pitch-line);
+      opacity: 0.7;
+      z-index: 20;
+      pointer-events: none;
+    }
+
     .roster-panel { flex: 1; }
     .roster-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
     .roster-header h2 { font-size: 1.3rem; }
     .roster-count { background: var(--primary); color: white; padding: 4px 14px; border-radius: 30px; font-size: 0.9rem; font-weight: 600; }
-    .position-groups {
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
+    .position-groups { display: flex; flex-direction: column; gap: 24px; }
     .group {
-      background: var(--surface);
-      border-radius: 20px;
-      padding: 16px 18px 18px 18px;
-      border: 2px solid var(--border);
-      transition: border-color 0.2s, background 0.2s;
+      background: var(--surface); border-radius: 20px; padding: 16px 18px 18px 18px;
+      border: 2px solid var(--border); transition: border-color 0.2s, background 0.2s;
     }
-    .group.drag-over {
-      border-color: var(--accent);
-      background: rgba(212, 175, 55, 0.05);
-    }
-    .group-title {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-    .group-title h3 {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: var(--primary);
-    }
-    .group-badge {
-      background: var(--accent);
-      color: var(--text);
-      padding: 2px 10px;
-      border-radius: 40px;
-      font-size: 0.8rem;
-      font-weight: 600;
-    }
+    .group.drag-over { border-color: var(--accent); background: rgba(212, 175, 55, 0.05); }
+    .group-title { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+    .group-title h3 { font-size: 1.2rem; font-weight: 600; color: var(--primary); }
+    .group-badge { background: var(--accent); color: var(--text); padding: 2px 10px; border-radius: 40px; font-size: 0.8rem; font-weight: 600; }
     .group-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-      gap: 12px;
-      min-height: 130px;
-      transition: background 0.1s;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px;
+      min-height: 130px; transition: background 0.1s;
     }
     .player-card {
-      background: var(--bg);
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      padding: 10px 6px 6px 6px;
-      position: relative;
-      transition: transform 0.1s, box-shadow 0.2s, opacity 0.2s;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      cursor: grab;
-      user-select: none;
+      background: var(--bg); border-radius: 14px; border: 1px solid var(--border);
+      padding: 10px 6px 6px 6px; position: relative; transition: transform 0.1s, box-shadow 0.2s, opacity 0.2s;
+      display: flex; flex-direction: column; align-items: center; cursor: grab; user-select: none;
       box-shadow: 0 2px 6px var(--shadow);
     }
-    .player-card:active {
-      cursor: grabbing;
-      opacity: 0.8;
-      transform: scale(0.98);
-    }
-    .player-card.dragging {
-      opacity: 0.4;
-      transform: scale(0.95);
-    }
+    .player-card:active { cursor: grabbing; opacity: 0.8; transform: scale(0.98); }
+    .player-card.dragging { opacity: 0.4; transform: scale(0.95); }
     .player-card .remove-btn {
-      position: absolute;
-      top: 2px;
-      right: 2px;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      border: none;
-      background: var(--surface);
-      color: var(--text-secondary);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: opacity 0.15s, background 0.15s;
-      font-size: 14px;
-      line-height: 1;
-      z-index: 10;
+      position: absolute; top: 2px; right: 2px; width: 22px; height: 22px; border-radius: 50%;
+      border: none; background: var(--surface); color: var(--text-secondary); cursor: pointer;
+      display: flex; align-items: center; justify-content: center; opacity: 0;
+      transition: opacity 0.15s, background 0.15s; font-size: 14px; line-height: 1; z-index: 10;
     }
     .player-card:hover .remove-btn { opacity: 1; }
     .player-card .remove-btn:hover { background: #e74c3c; color: white; }
     .player-card img {
-      width: 52px;
-      height: 52px;
-      border-radius: 8px;
-      object-fit: cover;
-      background: var(--surface);
-      margin-bottom: 4px;
-      border: 1px solid var(--border);
-      pointer-events: none;
+      width: 52px; height: 52px; border-radius: 8px; object-fit: cover; background: var(--surface);
+      margin-bottom: 4px; border: 1px solid var(--border); pointer-events: none;
     }
-    .player-card .card-name {
-      font-weight: 600;
-      font-size: 0.8rem;
-      text-align: center;
-      line-height: 1.2;
-      max-width: 100px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      pointer-events: none;
-    }
-    .card-rating {
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      background: var(--accent);
-      color: var(--text);
-      font-size: 0.65rem;
-      font-weight: 700;
-      width: 24px;
-      height: 20px;
-      border-radius: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-      pointer-events: none;
-      display:none;
-    }
-    .card-club {
-      font-size: 0.65rem;
-      color: var(--text-secondary);
-      max-width: 100px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-top: 2px;
-      pointer-events: none;
-    }
+    .player-card .card-name { font-weight: 600; font-size: 0.8rem; text-align: center; line-height: 1.2; max-width: 100px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none; }
+    .card-club { font-size: 0.65rem; color: var(--text-secondary); max-width: 100px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; pointer-events: none; }
     .empty-slot {
-      border: 2px dashed var(--border);
-      border-radius: 14px;
-      min-height: 95px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-secondary);
-      font-size: 0.7rem;
-      background: var(--surface);
+      border: 2px dashed var(--border); border-radius: 14px; min-height: 95px;
+      display: flex; align-items: center; justify-content: center; color: var(--text-secondary);
+      font-size: 0.7rem; background: var(--surface);
     }
-    .roster-full-message {
-      background: var(--accent);
-      color: var(--text);
-      padding: 8px 16px;
-      border-radius: 30px;
-      text-align: center;
-      margin-bottom: 16px;
-      font-weight: 500;
-    }
+    .roster-full-message { background: var(--accent); color: var(--text); padding: 8px 16px; border-radius: 30px; text-align: center; margin-bottom: 16px; font-weight: 500; }
+    /* === modal === */
     .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-      display: flex; align-items: center; justify-content: center;
-      opacity: 0; visibility: hidden; transition: 0.2s; z-index: 100;
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center;
+      justify-content: center; opacity: 0; visibility: hidden; transition: 0.2s; z-index: 100;
     }
     .modal-overlay.active { opacity: 1; visibility: visible; }
     .modal {
-      background: var(--surface); border-radius: 20px; padding: 24px;
-      width: 100%; max-width: 400px; transform: scale(0.9); transition: 0.2s;
+      background: var(--surface); border-radius: 20px; padding: 24px; width: 100%; max-width: 400px;
+      transform: scale(0.9); transition: 0.2s;
     }
     .modal-overlay.active .modal { transform: scale(1); }
     .modal h3 { margin-bottom: 20px; }
@@ -281,8 +320,6 @@
       .container { flex-direction: column; }
       .search-panel { width: 100%; }
       .search-results { max-height: 200px; }
-      .header-actions { gap: 4px; }
-      .header-btn, .theme-toggle { width: 34px; height: 34px; }
     }
   </style>
 </head>
@@ -290,7 +327,7 @@
   <header>
     <div class="logo">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
-      <h1>Football Roster · Drag & Drop</h1>
+      <h1>Football Roster · Drag & Drop on Pitch</h1>
     </div>
     <button class="theme-toggle" id="themeToggle">
       <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0-5a1 1 0 0 0 1 1h1a1 1 0 0 0 0-2h-1a1 1 0 0 0-1 1zm9.07 1.93a1 1 0 0 0-1.41 0l.7.71a1 1 0 1 0 1.42-1.42l-.71.7zm-9.42 9.42a1 1 0 0 0 0 1.42l.71.7a1 1 0 1 0 1.42-1.42l-.71-.7a1 1 0 0 0-1.42 0zM12 21a1 1 0 0 0 1-1v-1a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1zm-7-7a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1zm14 0a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1z"/></svg>
@@ -314,6 +351,46 @@
         <input type="text" id="searchInput" placeholder="Search players...">
       </div>
       <div class="search-results" id="searchResults"></div>
+      
+      <!-- VERTICAL PITCH with drop zones -->
+      <div class="pitch-container">
+        <div class="pitch-title">
+          <svg viewBox="0 0 24 24"><path d="M5 4h14v16H5z M8 8h8v8H8z"/></svg>
+          <span>Drag players onto pitch</span>
+        </div>
+        <div class="vertical-pitch" id="pitch">
+          <!-- Markings (visual only) -->
+          <div class="pitch-markings">
+            <svg viewBox="0 0 68 100" preserveAspectRatio="none">
+              <!-- Outline -->
+              <rect x="2" y="2" width="64" height="96" rx="4" ry="4"/>
+              <!-- Halfway line -->
+              <line x1="2" y1="50" x2="66" y2="50"/>
+              <!-- Center circle -->
+              <circle cx="34" cy="50" r="12"/>
+              <!-- Center spot -->
+              <circle cx="34" cy="50" r="1.5" fill="var(--pitch-line)"/>
+              <!-- Penalty areas -->
+              <rect x="2" y="15" width="64" height="25" rx="2" ry="2"/>
+              <rect x="2" y="60" width="64" height="25" rx="2" ry="2"/>
+              <!-- Goal areas -->
+              <rect x="2" y="25" width="64" height="10" rx="2" ry="2"/>
+              <rect x="2" y="65" width="64" height="10" rx="2" ry="2"/>
+              <!-- Penalty spots -->
+              <circle cx="34" cy="27.5" r="1.2" fill="var(--pitch-line)"/>
+              <circle cx="34" cy="72.5" r="1.2" fill="var(--pitch-line)"/>
+            </svg>
+          </div>
+          
+          <!-- Drop zones grid (5 rows x 3 columns for tactical positioning) -->
+          <div class="pitch-drop-zones" id="pitchDropZones"></div>
+        </div>
+        <div style="font-size:0.7rem; margin-top:8px; color:var(--text-secondary); display:flex; justify-content:space-between; width:100%;">
+          <span>⚽ Defense</span>
+          <span>⚽ Midfield</span>
+          <span>⚽ Attack</span>
+        </div>
+      </div>
     </div>
 
     <div class="roster-panel">
@@ -346,18 +423,42 @@
     </div>
   </div>
 
-  <div class="modal-overlay" id="modalOverlay"><div class="modal"><h3>Add Custom Player</h3><form id="customPlayerForm"><div class="form-group"><label for="playerName">Name *</label><input type="text" id="playerName" required placeholder="Enter player name"></div><div class="form-group"><label for="playerPosition">Position</label><select id="playerPosition"><option value="GK">GK</option><option value="CB">CB</option><option value="LB">LB</option><option value="RB">RB</option><option value="CDM">CDM</option><option value="CM">CM</option><option value="CAM">CAM</option><option value="LM">LM</option><option value="RM">RM</option><option value="LW">LW</option><option value="RW">RW</option><option value="ST">ST</option><option value="CF">CF</option></select></div><div class="form-group"><label for="playerRating">Rating (1-99)</label><input type="number" id="playerRating" min="1" max="99" value="70"></div><div class="form-group"><label for="playerClub">Club</label><input type="text" id="playerClub" placeholder="Enter club name"></div><div class="form-group"><label for="playerNationality">Nationality</label><input type="text" id="playerNationality" placeholder="Enter nationality"></div><div class="modal-buttons"><button type="button" class="btn-cancel" id="cancelBtn">Cancel</button><button type="submit" class="btn-save">Add Player</button></div></form></div></div>
+  <!-- modal: custom player -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h3>Add Custom Player</h3>
+      <form id="customPlayerForm">
+        <div class="form-group"><label for="playerName">Name *</label><input type="text" id="playerName" required placeholder="Enter player name"></div>
+        <div class="form-group"><label for="playerPosition">Position</label>
+          <select id="playerPosition">
+            <option value="GK">GK</option><option value="CB">CB</option><option value="LB">LB</option><option value="RB">RB</option>
+            <option value="CDM">CDM</option><option value="CM">CM</option><option value="CAM">CAM</option><option value="LM">LM</option>
+            <option value="RM">RM</option><option value="LW">LW</option><option value="RW">RW</option><option value="ST">ST</option><option value="CF">CF</option>
+          </select>
+        </div>
+        <div class="form-group"><label for="playerRating">Rating (1-99)</label><input type="number" id="playerRating" min="1" max="99" value="70"></div>
+        <div class="form-group"><label for="playerClub">Club</label><input type="text" id="playerClub" placeholder="Enter club name"></div>
+        <div class="form-group"><label for="playerNationality">Nationality</label><input type="text" id="playerNationality" placeholder="Enter nationality"></div>
+        <div class="modal-buttons"><button type="button" class="btn-cancel" id="cancelBtn">Cancel</button><button type="submit" class="btn-save">Add Player</button></div>
+      </form>
+    </div>
+  </div>
 
   <script>
     (function() {
+      // --- constants & config ---
       const MAX_ROSTER = 36;
+      // Use a public CORS proxy to access Fotmob API (educational use)
       const CORS_PROXY = 'https://corsproxy.io/?';
       const FOTMOB_API = CORS_PROXY + encodeURIComponent('https://www.fotmob.com/api/data/search/suggest?hits=50&lang=en&term=');
       const FOTMOB_PLAYER_API_BASE = CORS_PROXY + encodeURIComponent('https://www.fotmob.com/api/data/playerData?id=');
 
+      // --- state ---
       let roster = [];
+      let pitchPlayers = []; // players placed on pitch { playerId, row, col }
       let searchTimeout = null;
 
+      // --- DOM elements ---
       const searchInput = document.getElementById('searchInput');
       const searchResults = document.getElementById('searchResults');
       const rosterCountSpan = document.getElementById('rosterCount');
@@ -366,6 +467,7 @@
       const customPlayerForm = document.getElementById('customPlayerForm');
       const themeToggle = document.getElementById('themeToggle');
       const cancelBtn = document.getElementById('cancelBtn');
+      const pitchDropZones = document.getElementById('pitchDropZones');
 
       const gkGrid = document.getElementById('gkGrid');
       const defGrid = document.getElementById('defGrid');
@@ -377,6 +479,107 @@
       const fwdCountSpan = document.getElementById('fwdCount');
 
       let draggedPlayerId = null;
+      let draggedFromPitch = false;
+
+      // Initialize pitch grid (5 rows x 3 columns)
+      function initPitchGrid() {
+        if (!pitchDropZones) return;
+        let html = '';
+        for (let r = 0; r < 5; r++) {
+          html += '<div class="pitch-row">';
+          for (let c = 0; c < 3; c++) {
+            html += `<div class="pitch-cell" data-row="${r}" data-col="${c}" data-zone="${r}-${c}"></div>`;
+          }
+          html += '</div>';
+        }
+        pitchDropZones.innerHTML = html;
+
+        // Add drop listeners to cells
+        document.querySelectorAll('.pitch-cell').forEach(cell => {
+          cell.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            cell.classList.add('drag-over');
+          });
+          cell.addEventListener('dragleave', () => {
+            cell.classList.remove('drag-over');
+          });
+          cell.addEventListener('drop', (e) => {
+            e.preventDefault();
+            cell.classList.remove('drag-over');
+            
+            const playerId = e.dataTransfer.getData('text/plain');
+            if (!playerId) return;
+            
+            const row = cell.dataset.row;
+            const col = cell.dataset.col;
+            
+            // Check if player exists in roster
+            const playerIndex = roster.findIndex(p => p.id === playerId);
+            if (playerIndex === -1) return;
+            
+            // Remove player from any existing pitch position
+            pitchPlayers = pitchPlayers.filter(p => p.playerId !== playerId);
+            
+            // Add to new position
+            pitchPlayers.push({
+              playerId: playerId,
+              row: parseInt(row),
+              col: parseInt(col)
+            });
+            
+            renderPitchPlayers();
+            draggedPlayerId = null;
+          });
+        });
+      }
+
+      // Render players on pitch
+      function renderPitchPlayers() {
+        // Clear all cells first
+        document.querySelectorAll('.pitch-cell').forEach(cell => {
+          cell.innerHTML = '';
+        });
+        
+        pitchPlayers.forEach(pos => {
+          const cell = document.querySelector(`.pitch-cell[data-row="${pos.row}"][data-col="${pos.col}"]`);
+          if (!cell) return;
+          
+          const player = roster.find(p => p.id === pos.playerId);
+          if (!player) return;
+          
+          const playerEl = document.createElement('div');
+          playerEl.className = 'pitch-player';
+          playerEl.draggable = true;
+          playerEl.dataset.playerId = player.id;
+          playerEl.dataset.fromPitch = 'true';
+          
+          playerEl.innerHTML = `
+            <img src="${player.imgSrc || ''}" alt="${player.name}" onerror="this.style.display='none'">
+            <span>${player.name.split(' ').pop() || player.name}</span>
+            <span class="remove-mini" onclick="event.stopPropagation(); window.removePlayerFromPitch('${player.id}')">✕</span>
+          `;
+          
+          playerEl.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('text/plain', player.id);
+            e.dataTransfer.effectAllowed = 'move';
+            playerEl.classList.add('dragging');
+            draggedFromPitch = true;
+          });
+          
+          playerEl.addEventListener('dragend', (e) => {
+            playerEl.classList.remove('dragging');
+            draggedFromPitch = false;
+          });
+          
+          cell.appendChild(playerEl);
+        });
+      }
+
+      window.removePlayerFromPitch = function(playerId) {
+        pitchPlayers = pitchPlayers.filter(p => p.playerId !== playerId);
+        renderPitchPlayers();
+      };
 
       function getPlayerGroup(position) {
         if (!position) return 'mid';
@@ -411,7 +614,6 @@
           let html = players.map(p => {
             return `<div class="player-card" draggable="true" data-player-id="${p.id}">
               <button class="remove-btn" onclick="window.removePlayerById('${p.id}')">✕</button>
-              <div class="card-rating">${p.rating || '–'}</div>
               <img src="${p.imgSrc || ''}" alt="${p.name}" onerror="this.style.display='none'">
               <div class="card-name">${p.name}</div>
               <div class="card-club">${p.club || 'Free'}</div>
@@ -431,6 +633,10 @@
         renderGroupGrid(defGrid, defPlayers);
         renderGroupGrid(midGrid, midPlayers);
         renderGroupGrid(fwdGrid, fwdPlayers);
+        
+        // Clean up pitch players that are no longer in roster
+        pitchPlayers = pitchPlayers.filter(p => roster.some(r => r.id === p.playerId));
+        renderPitchPlayers();
       }
 
       function handleDragStart(e) {
@@ -441,12 +647,14 @@
         e.dataTransfer.setData('text/plain', playerId);
         e.dataTransfer.effectAllowed = 'move';
         card.classList.add('dragging');
+        draggedFromPitch = false;
       }
 
       function handleDragEnd(e) {
         const card = e.target.closest('.player-card');
         if (card) card.classList.remove('dragging');
         document.querySelectorAll('.group').forEach(g => g.classList.remove('drag-over'));
+        document.querySelectorAll('.pitch-cell').forEach(c => c.classList.remove('drag-over'));
         draggedPlayerId = null;
       }
 
@@ -496,16 +704,25 @@
         const index = roster.findIndex(p => p.id === id);
         if (index !== -1) {
           roster.splice(index, 1);
+          pitchPlayers = pitchPlayers.filter(p => p.playerId !== id);
           saveRoster();
           renderRoster();
         }
       };
 
-      function saveRoster() { localStorage.setItem('footballRoster', JSON.stringify(roster)); }
+      function saveRoster() { 
+        localStorage.setItem('footballRoster', JSON.stringify(roster));
+        localStorage.setItem('pitchPlayers', JSON.stringify(pitchPlayers));
+      }
+      
       function loadRoster() {
         const saved = localStorage.getItem('footballRoster');
         if (saved) { try { roster = JSON.parse(saved); } catch { roster = []; } }
         else roster = [];
+        
+        const savedPitch = localStorage.getItem('pitchPlayers');
+        if (savedPitch) { try { pitchPlayers = JSON.parse(savedPitch); } catch { pitchPlayers = []; } }
+        else pitchPlayers = [];
       }
 
       function loadTheme() {
@@ -532,7 +749,7 @@
       const importFileInput = document.getElementById('importFileInput');
 
       exportBtn.addEventListener('click', () => {
-        const data = JSON.stringify(roster, null, 2);
+        const data = JSON.stringify({ roster, pitchPlayers }, null, 2);
         const blob = new Blob([data], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -552,9 +769,13 @@
             const imported = JSON.parse(event.target.result);
             if (Array.isArray(imported)) {
               roster = imported;
-              saveRoster();
-              renderRoster();
+              pitchPlayers = [];
+            } else if (imported.roster) {
+              roster = imported.roster;
+              pitchPlayers = imported.pitchPlayers || [];
             }
+            saveRoster();
+            renderRoster();
           } catch {}
         };
         reader.readAsText(file);
@@ -633,21 +854,12 @@
             if (r) rating = Math.round(r.value);
           }
           const team = data.primaryTeam?.teamName || player.teamName || 'Free Agent';
-          let age = null, nationality = null, value = null;
-          if (data.playerInformation) {
-            data.playerInformation.forEach(info => {
-              if (info.translationKey === 'age_sentencecase' && info.value) age = info.value.numberValue || info.value.fallback;
-              if (info.translationKey === 'country_sentencecase' && info.value) nationality = info.value.fallback;
-              if (info.translationKey === 'transfer_value' && info.value) value = info.value.fallback;
-            });
-          }
           roster.push({
             id: 'api-' + player.id + '-' + Date.now(),
             name: data.name || player.name,
             position: position,
             rating: rating,
             club: team,
-            nationality, age, value,
             imgSrc: `https://images.fotmob.com/image_resources/playerimages/${player.id}.png`,
             isCustom: false
           });
@@ -673,8 +885,10 @@
         searchTimeout = setTimeout(() => searchPlayers(q), 300);
       });
 
+      // Initialize
       loadTheme();
       loadRoster();
+      initPitchGrid();
       renderRoster();
       setupDropZones();
     })();
