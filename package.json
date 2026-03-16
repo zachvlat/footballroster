@@ -1,0 +1,46 @@
+{
+  "name": "footballroster",
+  "version": "1.0.0",
+  "description": "- **Project name**: Football Roster Builder\r - **Type**: Single-page web application (HTML/CSS/JS)\r - **Core functionality**: Create and manage football rosters by searching real players via API or adding custom players\r - **Target users**: Football enthusiasts, coaches, fantasy team builders",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "build:mac": "electron-builder --mac",
+    "build:linux": "electron-builder --linux"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zachvlat/footballroster.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/zachvlat/footballroster/issues"
+  },
+  "homepage": "https://github.com/zachvlat/footballroster#readme",
+  "devDependencies": {
+    "electron": "^41.0.2",
+    "electron-builder": "^26.8.1"
+  },
+  "build": {
+    "appId": "com.footballroster.app",
+    "productName": "Football Roster",
+    "files": [
+      "index.html",
+      "main.js"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  }
+}

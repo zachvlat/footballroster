@@ -1,0 +1,27 @@
+app-id: com.footballroster.app
+runtime: org.freedesktop.Platform
+runtime-version: '23.08'
+sdk: org.freedesktop.Sdk
+command: football-roster
+
+finish-args:
+  - --share=ipc
+  - --socket=x11
+  - --socket=wayland
+  - --share=network
+  - --device=dri
+  - --filesystem=home
+
+modules:
+  - name: football-roster
+    buildsystem: simple
+    build-commands:
+      - cp -r . /app/football-roster
+      - install -Dm755 football-roster.sh /app/bin/football-roster
+    sources:
+      - type: dir
+        path: .
+      - type: script
+        dest-filename: football-roster.sh
+        commands:
+          - exec /app/football-roster/node_modules/.bin/electron /app/football-roster/
