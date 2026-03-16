@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +10,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     /* === reset & variables === */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     :root {
       --bg: #f5f5f0;
       --surface: #ffffff;
@@ -19,23 +25,25 @@
       --text: #1a1a1a;
       --text-secondary: #5a5a5a;
       --border: #e0e0e0;
-      --shadow: rgba(0,0,0,0.1);
+      --shadow: rgba(0, 0, 0, 0.1);
       --pitch-green: #2c5e2e;
       --pitch-line: #ffffff;
     }
+
     [data-theme="dark"] {
       --bg: #121212;
       --surface: #1e1e1e;
       --primary: #3d8b40;
       --secondary: #5a7d5a;
-      --accent: #f0c850;
+      --accent: #807300;
       --text: #f0f0f0;
       --text-secondary: #a0a0a0;
       --border: #333333;
-      --shadow: rgba(0,0,0,0.3);
+      --shadow: rgba(0, 0, 0, 0.3);
       --pitch-green: #1e3a1e;
       --pitch-line: #a0a0a0;
     }
+
     body {
       font-family: 'Outfit', sans-serif;
       background: var(--bg);
@@ -43,6 +51,7 @@
       min-height: 100vh;
       transition: background 0.3s, color 0.3s;
     }
+
     /* === header === */
     header {
       display: flex;
@@ -52,55 +61,199 @@
       background: var(--surface);
       border-bottom: 1px solid var(--border);
     }
-    .logo { display: flex; align-items: center; gap: 12px; }
-    .logo svg { width: 32px; height: 32px; stroke: var(--primary); }
-    h1 { font-size: 1.4rem; font-weight: 700; color: var(--primary); }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo svg {
+      width: 32px;
+      height: 32px;
+      stroke: var(--primary);
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
     .theme-toggle {
-      background: var(--surface); border: 2px solid var(--border); border-radius: 50%;
-      width: 42px; height: 42px; cursor: pointer; display: flex; align-items: center;
-      justify-content: center; transition: all 0.3s;
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: 50%;
+      width: 42px;
+      height: 42px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
     }
-    .theme-toggle:hover { border-color: var(--primary); }
-    .theme-toggle svg { width: 22px; height: 22px; fill: var(--accent); stroke: none; }
-    .header-actions { display: flex; gap: 8px; }
+
+    .theme-toggle:hover {
+      border-color: var(--primary);
+    }
+
+    .theme-toggle svg {
+      width: 22px;
+      height: 22px;
+      fill: var(--accent);
+      stroke: none;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+    }
+
     .header-btn {
-      background: var(--surface); border: 2px solid var(--border); border-radius: 8px;
-      width: 38px; height: 38px; cursor: pointer; display: flex; align-items: center;
-      justify-content: center; transition: all 0.3s; padding: 6px;
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      width: 38px;
+      height: 38px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      padding: 6px;
     }
-    .header-btn:hover { border-color: var(--primary); }
-    .header-btn svg { width: 18px; height: 18px; fill: var(--text); }
-    #importFileInput { display: none; }
+
+    .header-btn:hover {
+      border-color: var(--primary);
+    }
+
+    .header-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: var(--text);
+    }
+
+    #importFileInput {
+      display: none;
+    }
+
     /* === main layout === */
-    .container { display: flex; gap: 24px; padding: 20px; max-width: 1600px; margin: 0 auto; }
-    .search-panel { width: 500px; flex-shrink: 0; display: flex; flex-direction: column; gap: 16px; }
-    .search-box { position: relative; }
+    .container {
+      display: flex;
+      gap: 24px;
+      padding: 20px;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    .search-panel {
+      width: 500px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .search-box {
+      position: relative;
+    }
+
     .search-box input {
-      width: 100%; padding: 12px 12px 12px 42px; border: 2px solid var(--border);
-      border-radius: 12px; font-size: 1rem; background: var(--surface); color: var(--text);
+      width: 100%;
+      padding: 12px 12px 12px 42px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-size: 1rem;
+      background: var(--surface);
+      color: var(--text);
     }
-    .search-box input:focus { outline: none; border-color: var(--primary); }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
     .search-box svg {
-      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
-      width: 18px; height: 18px; fill: var(--text-secondary);
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      fill: var(--text-secondary);
     }
+
     .search-results {
-      background: var(--surface); border-radius: 12px; border: 1px solid var(--border);
-      max-height: 300px; overflow-y: auto;
+      background: var(--surface);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      max-height: 300px;
+      overflow-y: auto;
     }
+
     .search-result-item {
-      display: flex; align-items: center; gap: 10px; padding: 10px; cursor: pointer;
-      border-bottom: 1px solid var(--border); transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      cursor: pointer;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
     }
-    .search-result-item:hover { background: var(--bg); }
-    .search-result-item img { width: 40px; height: 40px; border-radius: 6px; object-fit: cover; background: var(--bg); }
-    .player-info { flex:1; min-width:0; }
-    .player-name { font-weight: 600; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .player-meta { font-size: 0.8rem; color: var(--text-secondary); display: flex; gap: 6px; align-items: center; }
-    .position-badge { background: var(--primary); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; }
+
+    .search-result-item:hover {
+      background: var(--bg);
+    }
+
+    .search-result-item img {
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      object-fit: cover;
+      background: var(--bg);
+    }
+
+    .player-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .player-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .player-meta {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .position-badge {
+      background: var(--primary);
+      color: white;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
     .add-custom-btn {
-      display: block; width: 100%; padding: 10px; margin-top: 8px; background: var(--primary);
-      color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
     }
 
     /* === VERTICAL PITCH for drag & drop === */
@@ -113,6 +266,7 @@
       flex-direction: column;
       align-items: center;
     }
+
     .pitch-title {
       font-weight: 600;
       margin-bottom: 12px;
@@ -121,15 +275,18 @@
       align-items: center;
       gap: 6px;
     }
+
     .pitch-title svg {
       width: 18px;
       height: 18px;
       fill: var(--accent);
     }
+
     .vertical-pitch {
       position: relative;
       width: 100%;
-      aspect-ratio: 68/100; /* width/height ratio for vertical pitch */
+      aspect-ratio: 68/100;
+      /* width/height ratio for vertical pitch */
       background: var(--pitch-green);
       border: 3px solid var(--pitch-line);
       border-radius: 8px;
@@ -137,6 +294,7 @@
       cursor: pointer;
       overflow: visible;
     }
+
     /* Pitch markings */
     .pitch-markings {
       position: absolute;
@@ -147,6 +305,7 @@
       pointer-events: none;
       z-index: 1;
     }
+
     .pitch-markings svg {
       width: 100%;
       height: 100%;
@@ -154,11 +313,13 @@
       stroke-width: 2;
       fill: none;
     }
+
     .pitch-markings svg line,
     .pitch-markings svg circle,
     .pitch-markings svg rect {
       stroke: var(--pitch-line);
     }
+
     /* Drop zones on pitch */
     .pitch-drop-zones {
       position: absolute;
@@ -170,24 +331,28 @@
       flex-direction: column;
       z-index: 5;
     }
+
     .pitch-row {
       display: flex;
       flex: 1;
       width: 100%;
     }
+
     .pitch-cell {
       flex: 1;
-      border: 1px dashed rgba(255,255,255,0.2);
+      border: 1px dashed rgba(255, 255, 255, 0.2);
       transition: background 0.2s;
       position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
     }
+
     .pitch-cell.drag-over {
       background: rgba(212, 175, 55, 0.3);
       border: 2px solid var(--accent);
     }
+
     /* Player on pitch */
     .pitch-player {
       background: var(--surface);
@@ -206,13 +371,16 @@
       z-index: 10;
       position: relative;
     }
+
     .pitch-player:active {
       cursor: grabbing;
       opacity: 0.8;
     }
+
     .pitch-player.dragging {
       opacity: 0.4;
     }
+
     .pitch-player img {
       width: 20px;
       height: 20px;
@@ -220,6 +388,7 @@
       object-fit: cover;
       background: var(--bg);
     }
+
     .pitch-player .remove-mini {
       width: 16px;
       height: 16px;
@@ -234,10 +403,12 @@
       cursor: pointer;
       margin-left: 2px;
     }
+
     .pitch-player .remove-mini:hover {
       background: #e74c3c;
       color: white;
     }
+
     .pitch-row-label {
       position: absolute;
       left: 2px;
@@ -249,96 +420,325 @@
       pointer-events: none;
     }
 
-    .roster-panel { flex: 1; }
-    .roster-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-    .roster-header h2 { font-size: 1.3rem; }
-    .roster-count { background: var(--primary); color: white; padding: 4px 14px; border-radius: 30px; font-size: 0.9rem; font-weight: 600; }
-    .position-groups { display: flex; flex-direction: column; gap: 24px; }
+    .roster-panel {
+      flex: 1;
+    }
+
+    .roster-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .roster-header h2 {
+      font-size: 1.3rem;
+    }
+
+    .roster-count {
+      background: var(--primary);
+      color: white;
+      padding: 4px 14px;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .position-groups {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
     .group {
-      background: var(--surface); border-radius: 20px; padding: 16px 18px 18px 18px;
-      border: 2px solid var(--border); transition: border-color 0.2s, background 0.2s;
+      background: var(--surface);
+      border-radius: 20px;
+      padding: 16px 18px 18px 18px;
+      border: 2px solid var(--border);
+      transition: border-color 0.2s, background 0.2s;
     }
-    .group.drag-over { border-color: var(--accent); background: rgba(212, 175, 55, 0.05); }
-    .group-title { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
-    .group-title h3 { font-size: 1.2rem; font-weight: 600; color: var(--primary); }
-    .group-badge { background: var(--accent); color: var(--text); padding: 2px 10px; border-radius: 40px; font-size: 0.8rem; font-weight: 600; }
+
+    .group.drag-over {
+      border-color: var(--accent);
+      background: rgba(212, 175, 55, 0.05);
+    }
+
+    .group-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .group-title h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .group-badge {
+      background: var(--accent);
+      color: var(--text);
+      padding: 2px 10px;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
     .group-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px;
-      min-height: 130px; transition: background 0.1s;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 12px;
+      min-height: 130px;
+      transition: background 0.1s;
     }
+
     .player-card {
-      background: var(--bg); border-radius: 14px; border: 1px solid var(--border);
-      padding: 10px 6px 6px 6px; position: relative; transition: transform 0.1s, box-shadow 0.2s, opacity 0.2s;
-      display: flex; flex-direction: column; align-items: center; cursor: grab; user-select: none;
+      background: var(--bg);
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 10px 6px 6px 6px;
+      position: relative;
+      transition: transform 0.1s, box-shadow 0.2s, opacity 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: grab;
+      user-select: none;
       box-shadow: 0 2px 6px var(--shadow);
     }
-    .player-card:active { cursor: grabbing; opacity: 0.8; transform: scale(0.98); }
-    .player-card.dragging { opacity: 0.4; transform: scale(0.95); }
+
+    .player-card:active {
+      cursor: grabbing;
+      opacity: 0.8;
+      transform: scale(0.98);
+    }
+
+    .player-card.dragging {
+      opacity: 0.4;
+      transform: scale(0.95);
+    }
+
     .player-card .remove-btn {
-      position: absolute; top: 2px; right: 2px; width: 22px; height: 22px; border-radius: 50%;
-      border: none; background: var(--surface); color: var(--text-secondary); cursor: pointer;
-      display: flex; align-items: center; justify-content: center; opacity: 0;
-      transition: opacity 0.15s, background 0.15s; font-size: 14px; line-height: 1; z-index: 10;
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: none;
+      background: var(--surface);
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.15s, background 0.15s;
+      font-size: 14px;
+      line-height: 1;
+      z-index: 10;
     }
-    .player-card:hover .remove-btn { opacity: 1; }
-    .player-card .remove-btn:hover { background: #e74c3c; color: white; }
+
+    .player-card:hover .remove-btn {
+      opacity: 1;
+    }
+
+    .player-card .remove-btn:hover {
+      background: #e74c3c;
+      color: white;
+    }
+
     .player-card img {
-      width: 52px; height: 52px; border-radius: 8px; object-fit: cover; background: var(--surface);
-      margin-bottom: 4px; border: 1px solid var(--border); pointer-events: none;
+      width: 52px;
+      height: 52px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: var(--surface);
+      margin-bottom: 4px;
+      border: 1px solid var(--border);
+      pointer-events: none;
     }
-    .player-card .card-name { font-weight: 600; font-size: 0.8rem; text-align: center; line-height: 1.2; max-width: 100px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none; }
-    .card-club { font-size: 0.65rem; color: var(--text-secondary); max-width: 100px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; pointer-events: none; }
+
+    .player-card .card-name {
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-align: center;
+      line-height: 1.2;
+      max-width: 100px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      pointer-events: none;
+    }
+
+    .card-club {
+      font-size: 0.65rem;
+      color: var(--text-secondary);
+      max-width: 100px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
+      pointer-events: none;
+    }
+
     .empty-slot {
-      border: 2px dashed var(--border); border-radius: 14px; min-height: 95px;
-      display: flex; align-items: center; justify-content: center; color: var(--text-secondary);
-      font-size: 0.7rem; background: var(--surface);
+      border: 2px dashed var(--border);
+      border-radius: 14px;
+      min-height: 95px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      font-size: 0.7rem;
+      background: var(--surface);
     }
-    .roster-full-message { background: var(--accent); color: var(--text); padding: 8px 16px; border-radius: 30px; text-align: center; margin-bottom: 16px; font-weight: 500; }
+
+    .roster-full-message {
+      background: var(--accent);
+      color: var(--text);
+      padding: 8px 16px;
+      border-radius: 30px;
+      text-align: center;
+      margin-bottom: 16px;
+      font-weight: 500;
+    }
+
     /* === modal === */
     .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center;
-      justify-content: center; opacity: 0; visibility: hidden; transition: 0.2s; z-index: 100;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.2s;
+      z-index: 100;
     }
-    .modal-overlay.active { opacity: 1; visibility: visible; }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
     .modal {
-      background: var(--surface); border-radius: 20px; padding: 24px; width: 100%; max-width: 400px;
-      transform: scale(0.9); transition: 0.2s;
+      background: var(--surface);
+      border-radius: 20px;
+      padding: 24px;
+      width: 100%;
+      max-width: 400px;
+      transform: scale(0.9);
+      transition: 0.2s;
     }
-    .modal-overlay.active .modal { transform: scale(1); }
-    .modal h3 { margin-bottom: 20px; }
-    .form-group { margin-bottom: 16px; }
-    .form-group label { display: block; margin-bottom: 4px; font-weight: 500; font-size: 0.9rem; }
-    .form-group input, .form-group select {
-      width: 100%; padding: 10px; border: 2px solid var(--border); border-radius: 8px;
-      background: var(--bg); color: var(--text);
+
+    .modal-overlay.active .modal {
+      transform: scale(1);
     }
-    .modal-buttons { display: flex; gap: 12px; margin-top: 20px; }
-    .btn-cancel { background: var(--bg); border: 2px solid var(--border); color: var(--text); flex:1; padding: 10px; border-radius: 8px; font-weight:600; }
-    .btn-save { background: var(--primary); border: none; color: white; flex:1; border-radius: 8px; font-weight:600; }
-    @media (max-width: 900px) { .group-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); } }
+
+    .modal h3 {
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 4px;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .btn-cancel {
+      background: var(--bg);
+      border: 2px solid var(--border);
+      color: var(--text);
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+
+    .btn-save {
+      background: var(--primary);
+      border: none;
+      color: white;
+      flex: 1;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+
+    @media (max-width: 900px) {
+      .group-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      }
+    }
+
     @media (max-width: 768px) {
-      .container { flex-direction: column; }
-      .search-panel { width: 100%; }
-      .search-results { max-height: 200px; }
+      .container {
+        flex-direction: column;
+      }
+
+      .search-panel {
+        width: 100%;
+      }
+
+      .search-results {
+        max-height: 200px;
+      }
     }
   </style>
 </head>
+
 <body>
   <header>
     <div class="logo">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10" />
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+        <path d="M2 12h20" />
+      </svg>
       <h1>Football Roster · Drag & Drop on Pitch</h1>
     </div>
     <button class="theme-toggle" id="themeToggle">
-      <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0-5a1 1 0 0 0 1 1h1a1 1 0 0 0 0-2h-1a1 1 0 0 0-1 1zm9.07 1.93a1 1 0 0 0-1.41 0l.7.71a1 1 0 1 0 1.42-1.42l-.71.7zm-9.42 9.42a1 1 0 0 0 0 1.42l.71.7a1 1 0 1 0 1.42-1.42l-.71-.7a1 1 0 0 0-1.42 0zM12 21a1 1 0 0 0 1-1v-1a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1zm-7-7a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1zm14 0a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1z"/></svg>
-      <svg class="moon-icon" style="display:none" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="sun-icon" viewBox="0 0 24 24">
+        <path
+          d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0-5a1 1 0 0 0 1 1h1a1 1 0 0 0 0-2h-1a1 1 0 0 0-1 1zm9.07 1.93a1 1 0 0 0-1.41 0l.7.71a1 1 0 1 0 1.42-1.42l-.71.7zm-9.42 9.42a1 1 0 0 0 0 1.42l.71.7a1 1 0 1 0 1.42-1.42l-.71-.7a1 1 0 0 0-1.42 0zM12 21a1 1 0 0 0 1-1v-1a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1zm-7-7a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1zm14 0a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1z" />
+      </svg>
+      <svg class="moon-icon" style="display:none" viewBox="0 0 24 24">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+      </svg>
     </button>
     <div class="header-actions">
       <button class="header-btn" id="exportBtn" title="Export Roster">
-        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+        <svg viewBox="0 0 24 24">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" />
+        </svg>
       </button>
       <button class="header-btn" id="importBtn" title="Import Roster">
-        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+        <svg viewBox="0 0 24 24">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+        </svg>
       </button>
       <input type="file" id="importFileInput" accept=".json">
     </div>
@@ -347,48 +747,30 @@
   <div class="container">
     <div class="search-panel">
       <div class="search-box">
-        <svg viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0z"/></svg>
+        <svg viewBox="0 0 24 24">
+          <path d="M21 21l-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0z" />
+        </svg>
         <input type="text" id="searchInput" placeholder="Search players...">
       </div>
       <div class="search-results" id="searchResults"></div>
-      
+
       <!-- VERTICAL PITCH with drop zones -->
       <div class="pitch-container">
         <div class="pitch-title">
-          <svg viewBox="0 0 24 24"><path d="M5 4h14v16H5z M8 8h8v8H8z"/></svg>
+          <svg viewBox="0 0 24 24">
+            <path d="M5 4h14v16H5z M8 8h8v8H8z" />
+          </svg>
           <span>Drag players onto pitch</span>
         </div>
         <div class="vertical-pitch" id="pitch">
           <!-- Markings (visual only) -->
           <div class="pitch-markings">
-            <svg viewBox="0 0 68 100" preserveAspectRatio="none">
-              <!-- Outline -->
-              <rect x="2" y="2" width="64" height="96" rx="4" ry="4"/>
-              <!-- Halfway line -->
-              <line x1="2" y1="50" x2="66" y2="50"/>
-              <!-- Center circle -->
-              <circle cx="34" cy="50" r="12"/>
-              <!-- Center spot -->
-              <circle cx="34" cy="50" r="1.5" fill="var(--pitch-line)"/>
-              <!-- Penalty areas -->
-              <rect x="2" y="15" width="64" height="25" rx="2" ry="2"/>
-              <rect x="2" y="60" width="64" height="25" rx="2" ry="2"/>
-              <!-- Goal areas -->
-              <rect x="2" y="25" width="64" height="10" rx="2" ry="2"/>
-              <rect x="2" y="65" width="64" height="10" rx="2" ry="2"/>
-              <!-- Penalty spots -->
-              <circle cx="34" cy="27.5" r="1.2" fill="var(--pitch-line)"/>
-              <circle cx="34" cy="72.5" r="1.2" fill="var(--pitch-line)"/>
-            </svg>
+            <img src="https://img.freepik.com/premium-vector/soccer-football-field_58199-54.jpg" alt="Football pitch"
+              style="width: 100%; height: 100%; object-fit: cover; opacity: 0.9;">
           </div>
-          
+
           <!-- Drop zones grid (5 rows x 3 columns for tactical positioning) -->
           <div class="pitch-drop-zones" id="pitchDropZones"></div>
-        </div>
-        <div style="font-size:0.7rem; margin-top:8px; color:var(--text-secondary); display:flex; justify-content:space-between; width:100%;">
-          <span>⚽ Defense</span>
-          <span>⚽ Midfield</span>
-          <span>⚽ Attack</span>
         </div>
       </div>
     </div>
@@ -404,19 +786,27 @@
 
       <div class="position-groups" id="positionGroups">
         <div class="group" data-group="gk" id="group-gk">
-          <div class="group-title"><h3>Goalkeepers</h3><span class="group-badge" id="gkCount">0</span></div>
+          <div class="group-title">
+            <h3>Goalkeepers</h3><span class="group-badge" id="gkCount">0</span>
+          </div>
           <div class="group-grid" id="gkGrid"></div>
         </div>
         <div class="group" data-group="def" id="group-def">
-          <div class="group-title"><h3>Defenders</h3><span class="group-badge" id="defCount">0</span></div>
+          <div class="group-title">
+            <h3>Defenders</h3><span class="group-badge" id="defCount">0</span>
+          </div>
           <div class="group-grid" id="defGrid"></div>
         </div>
         <div class="group" data-group="mid" id="group-mid">
-          <div class="group-title"><h3>Midfielders</h3><span class="group-badge" id="midCount">0</span></div>
+          <div class="group-title">
+            <h3>Midfielders</h3><span class="group-badge" id="midCount">0</span>
+          </div>
           <div class="group-grid" id="midGrid"></div>
         </div>
         <div class="group" data-group="fwd" id="group-fwd">
-          <div class="group-title"><h3>Attackers</h3><span class="group-badge" id="fwdCount">0</span></div>
+          <div class="group-title">
+            <h3>Attackers</h3><span class="group-badge" id="fwdCount">0</span>
+          </div>
           <div class="group-grid" id="fwdGrid"></div>
         </div>
       </div>
@@ -428,24 +818,39 @@
     <div class="modal">
       <h3>Add Custom Player</h3>
       <form id="customPlayerForm">
-        <div class="form-group"><label for="playerName">Name *</label><input type="text" id="playerName" required placeholder="Enter player name"></div>
+        <div class="form-group"><label for="playerName">Name *</label><input type="text" id="playerName" required
+            placeholder="Enter player name"></div>
         <div class="form-group"><label for="playerPosition">Position</label>
           <select id="playerPosition">
-            <option value="GK">GK</option><option value="CB">CB</option><option value="LB">LB</option><option value="RB">RB</option>
-            <option value="CDM">CDM</option><option value="CM">CM</option><option value="CAM">CAM</option><option value="LM">LM</option>
-            <option value="RM">RM</option><option value="LW">LW</option><option value="RW">RW</option><option value="ST">ST</option><option value="CF">CF</option>
+            <option value="GK">GK</option>
+            <option value="CB">CB</option>
+            <option value="LB">LB</option>
+            <option value="RB">RB</option>
+            <option value="CDM">CDM</option>
+            <option value="CM">CM</option>
+            <option value="CAM">CAM</option>
+            <option value="LM">LM</option>
+            <option value="RM">RM</option>
+            <option value="LW">LW</option>
+            <option value="RW">RW</option>
+            <option value="ST">ST</option>
+            <option value="CF">CF</option>
           </select>
         </div>
-        <div class="form-group"><label for="playerRating">Rating (1-99)</label><input type="number" id="playerRating" min="1" max="99" value="70"></div>
-        <div class="form-group"><label for="playerClub">Club</label><input type="text" id="playerClub" placeholder="Enter club name"></div>
-        <div class="form-group"><label for="playerNationality">Nationality</label><input type="text" id="playerNationality" placeholder="Enter nationality"></div>
-        <div class="modal-buttons"><button type="button" class="btn-cancel" id="cancelBtn">Cancel</button><button type="submit" class="btn-save">Add Player</button></div>
+        <div class="form-group"><label for="playerRating">Rating (1-99)</label><input type="number" id="playerRating"
+            min="1" max="99" value="70"></div>
+        <div class="form-group"><label for="playerClub">Club</label><input type="text" id="playerClub"
+            placeholder="Enter club name"></div>
+        <div class="form-group"><label for="playerNationality">Nationality</label><input type="text"
+            id="playerNationality" placeholder="Enter nationality"></div>
+        <div class="modal-buttons"><button type="button" class="btn-cancel" id="cancelBtn">Cancel</button><button
+            type="submit" class="btn-save">Add Player</button></div>
       </form>
     </div>
   </div>
 
   <script>
-    (function() {
+    (function () {
       // --- constants & config ---
       const MAX_ROSTER = 36;
       // Use a public CORS proxy to access Fotmob API (educational use)
@@ -507,27 +912,27 @@
           cell.addEventListener('drop', (e) => {
             e.preventDefault();
             cell.classList.remove('drag-over');
-            
+
             const playerId = e.dataTransfer.getData('text/plain');
             if (!playerId) return;
-            
+
             const row = cell.dataset.row;
             const col = cell.dataset.col;
-            
+
             // Check if player exists in roster
             const playerIndex = roster.findIndex(p => p.id === playerId);
             if (playerIndex === -1) return;
-            
+
             // Remove player from any existing pitch position
             pitchPlayers = pitchPlayers.filter(p => p.playerId !== playerId);
-            
+
             // Add to new position
             pitchPlayers.push({
               playerId: playerId,
               row: parseInt(row),
               col: parseInt(col)
             });
-            
+
             renderPitchPlayers();
             draggedPlayerId = null;
           });
@@ -540,43 +945,43 @@
         document.querySelectorAll('.pitch-cell').forEach(cell => {
           cell.innerHTML = '';
         });
-        
+
         pitchPlayers.forEach(pos => {
           const cell = document.querySelector(`.pitch-cell[data-row="${pos.row}"][data-col="${pos.col}"]`);
           if (!cell) return;
-          
+
           const player = roster.find(p => p.id === pos.playerId);
           if (!player) return;
-          
+
           const playerEl = document.createElement('div');
           playerEl.className = 'pitch-player';
           playerEl.draggable = true;
           playerEl.dataset.playerId = player.id;
           playerEl.dataset.fromPitch = 'true';
-          
+
           playerEl.innerHTML = `
             <img src="${player.imgSrc || ''}" alt="${player.name}" onerror="this.style.display='none'">
             <span>${player.name.split(' ').pop() || player.name}</span>
             <span class="remove-mini" onclick="event.stopPropagation(); window.removePlayerFromPitch('${player.id}')">✕</span>
           `;
-          
+
           playerEl.addEventListener('dragstart', (e) => {
             e.dataTransfer.setData('text/plain', player.id);
             e.dataTransfer.effectAllowed = 'move';
             playerEl.classList.add('dragging');
             draggedFromPitch = true;
           });
-          
+
           playerEl.addEventListener('dragend', (e) => {
             playerEl.classList.remove('dragging');
             draggedFromPitch = false;
           });
-          
+
           cell.appendChild(playerEl);
         });
       }
 
-      window.removePlayerFromPitch = function(playerId) {
+      window.removePlayerFromPitch = function (playerId) {
         pitchPlayers = pitchPlayers.filter(p => p.playerId !== playerId);
         renderPitchPlayers();
       };
@@ -585,8 +990,8 @@
         if (!position) return 'mid';
         const pos = position.toUpperCase().trim();
         if (pos === 'GK') return 'gk';
-        if (['CB','LB','RB','LCB','RCB','LWB','RWB','SW'].some(p => pos.includes(p))) return 'def';
-        if (['ST','CF','LW','RW','SS','LF','RF'].some(p => pos.includes(p))) return 'fwd';
+        if (['CB', 'LB', 'RB', 'LCB', 'RCB', 'LWB', 'RWB', 'SW'].some(p => pos.includes(p))) return 'def';
+        if (['ST', 'CF', 'LW', 'RW', 'SS', 'LF', 'RF'].some(p => pos.includes(p))) return 'fwd';
         return 'mid';
       }
 
@@ -620,7 +1025,7 @@
             </div>`;
           }).join('');
           const emptyNeeded = Math.max(0, 4 - players.length);
-          for (let i=0; i<emptyNeeded; i++) html += '<div class="empty-slot">Empty</div>';
+          for (let i = 0; i < emptyNeeded; i++) html += '<div class="empty-slot">Empty</div>';
           container.innerHTML = html;
 
           container.querySelectorAll('.player-card[draggable="true"]').forEach(card => {
@@ -633,7 +1038,7 @@
         renderGroupGrid(defGrid, defPlayers);
         renderGroupGrid(midGrid, midPlayers);
         renderGroupGrid(fwdGrid, fwdPlayers);
-        
+
         // Clean up pitch players that are no longer in roster
         pitchPlayers = pitchPlayers.filter(p => roster.some(r => r.id === p.playerId));
         renderPitchPlayers();
@@ -688,7 +1093,7 @@
 
             let newPosition = player.position;
             if (targetGroup === 'gk' && currentGroup !== 'gk') newPosition = 'GK';
-            else if (targetGroup === 'def' && currentGroup !== 'def') newPosition = 'CB'; 
+            else if (targetGroup === 'def' && currentGroup !== 'def') newPosition = 'CB';
             else if (targetGroup === 'mid' && currentGroup !== 'mid') newPosition = 'CM';
             else if (targetGroup === 'fwd' && currentGroup !== 'fwd') newPosition = 'ST';
 
@@ -700,7 +1105,7 @@
         });
       }
 
-      window.removePlayerById = function(id) {
+      window.removePlayerById = function (id) {
         const index = roster.findIndex(p => p.id === id);
         if (index !== -1) {
           roster.splice(index, 1);
@@ -710,16 +1115,16 @@
         }
       };
 
-      function saveRoster() { 
+      function saveRoster() {
         localStorage.setItem('footballRoster', JSON.stringify(roster));
         localStorage.setItem('pitchPlayers', JSON.stringify(pitchPlayers));
       }
-      
+
       function loadRoster() {
         const saved = localStorage.getItem('footballRoster');
         if (saved) { try { roster = JSON.parse(saved); } catch { roster = []; } }
         else roster = [];
-        
+
         const savedPitch = localStorage.getItem('pitchPlayers');
         if (savedPitch) { try { pitchPlayers = JSON.parse(savedPitch); } catch { pitchPlayers = []; } }
         else pitchPlayers = [];
@@ -776,13 +1181,13 @@
             }
             saveRoster();
             renderRoster();
-          } catch {}
+          } catch { }
         };
         reader.readAsText(file);
         e.target.value = '';
       });
 
-      window.openModal = function(prefill) {
+      window.openModal = function (prefill) {
         document.getElementById('playerName').value = prefill || '';
         document.getElementById('playerRating').value = 70;
         modalOverlay.classList.add('active');
@@ -833,7 +1238,7 @@
         searchResults.innerHTML = `<div class="search-message">No players for "${query}"</div><button class="add-custom-btn" onclick="openModal('${query}')">Add Custom Player</button>`;
       }
 
-      window.addPlayerFromApi = async function(player) {
+      window.addPlayerFromApi = async function (player) {
         if (roster.length >= MAX_ROSTER) { rosterFullMessage.style.display = 'block'; return; }
         rosterFullMessage.style.display = 'none';
         searchResults.innerHTML = '<div class="search-message">Loading player data...</div>';
@@ -894,4 +1299,5 @@
     })();
   </script>
 </body>
+
 </html>
