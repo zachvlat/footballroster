@@ -3,8 +3,30 @@
   "version": "1.0.0",
   "description": "- **Project name**: Football Roster Builder\r - **Type**: Single-page web application (HTML/CSS/JS)\r - **Core functionality**: Create and manage football rosters by searching real players via API or adding custom players\r - **Target users**: Football enthusiasts, coaches, fantasy team builders",
   "main": "main.js",
+  "config": {
+    "forge": {
+      "packagerConfig": {
+        "name": "FootballRoster",
+        "executableName": "FootballRoster"
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "FootballRoster"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": ["win32"]
+        }
+      ]
+    }
+  },
   "scripts": {
     "start": "electron .",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
     "build": "electron-builder",
     "build:win": "electron-builder --win",
     "build:mac": "electron-builder --mac",
@@ -15,7 +37,7 @@
     "url": "git+https://github.com/zachvlat/footballroster.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Your Name",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
@@ -23,8 +45,12 @@
   },
   "homepage": "https://github.com/zachvlat/footballroster#readme",
   "devDependencies": {
+    "@electron-forge/cli": "^7.11.1",
+    "@electron-forge/maker-squirrel": "^7.11.1",
+    "@electron-forge/maker-zip": "^7.11.1",
     "electron": "^41.0.2",
-    "electron-builder": "^26.8.1"
+    "electron-builder": "^26.8.1",
+    "electron-packager": "^17.1.2"
   },
   "build": {
     "appId": "com.footballroster.app",
