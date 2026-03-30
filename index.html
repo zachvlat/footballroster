@@ -1029,7 +1029,7 @@
           playerEl.dataset.fromPitch = 'true';
 
           playerEl.innerHTML = `
-            <img src="${player.imgSrc || ''}" alt="${player.name}" onerror="this.style.display='none'">
+            <img src="${player.imgSrc || 'https://placehold.co/50x50/EEE/31343C.png?text=⚽'}" alt="${player.name}" onerror="this.src='https://placehold.co/50x50/EEE/31343C.png?text=⚽'">
             <span>${player.name.split(' ').pop() || player.name}</span>
             <span class="remove-mini" onclick="event.stopPropagation(); window.removePlayerFromPitch('${player.id}')">✕</span>
           `;
@@ -1088,7 +1088,7 @@
           let html = players.map(p => {
             return `<div class="player-card" draggable="true" data-player-id="${p.id}">
               <button class="remove-btn" onclick="window.removePlayerById('${p.id}')">✕</button>
-              <img src="${p.imgSrc || ''}" alt="${p.name}" onerror="this.style.display='none'">
+              <img src="${p.imgSrc || 'https://placehold.co/50x50/EEE/31343C.png?text=⚽'}" alt="${p.name}" onerror="this.src='https://placehold.co/50x50/EEE/31343C.png?text=⚽'">
               <div class="card-name">${p.name}</div>
               <div class="card-club">${p.club || 'Free'}</div>
             </div>`;
