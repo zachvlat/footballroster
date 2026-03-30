@@ -1,8 +1,8 @@
-app-id: com.footballroster.app
+app-id: com.footballrosterbuilder.app
 runtime: org.freedesktop.Platform
-runtime-version: '23.08'
+runtime-version: '24.08'
 sdk: org.freedesktop.Sdk
-command: football-roster
+command: football-roster-builder
 
 finish-args:
   - --share=ipc
@@ -13,15 +13,15 @@ finish-args:
   - --filesystem=home
 
 modules:
-  - name: football-roster
+  - name: football-roster-builder
     buildsystem: simple
     build-commands:
-      - cp -r . /app/football-roster
-      - install -Dm755 football-roster.sh /app/bin/football-roster
+      - cp -r . /app/football-roster-builder
+      - install -Dm755 football-roster-builder.sh /app/bin/football-roster-builder
     sources:
       - type: dir
         path: .
       - type: script
-        dest-filename: football-roster.sh
+        dest-filename: football-roster-builder.sh
         commands:
-          - exec /app/football-roster/node_modules/.bin/electron /app/football-roster/
+          - exec /app/football-roster-builder/node_modules/.bin/electron /app/football-roster-builder/

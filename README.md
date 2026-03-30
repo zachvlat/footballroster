@@ -42,10 +42,10 @@ For Flatpak, you need [flatpak-builder](https://flatpak.org/) installed:
 
 ```bash
 # Create the flatpak build directory and manifest
-flatpak-builder --force-clean build-dir flatpak/com.footballroster.app.yml
+flatpak-builder --force-clean build-dir flatpak/com.footballrosterbuilder.app.yml
 
 # Build the flatpak
-flatpak build-bundle dist/ football-roster.flatpak com.footballroster.app
+flatpak build-bundle dist/ football-roster.flatpak com.footballrosterbuilder.app
 ```
 
 ## License
