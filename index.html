@@ -353,7 +353,7 @@
       display: flex;
       align-items: center;
       gap: 4px;
-      font-size: 0.7rem;
+      font-size: 15px;
       font-weight: 600;
       border: 2px solid var(--primary);
       box-shadow: 0 2px 8px var(--shadow);
@@ -924,7 +924,7 @@
       const MAX_ROSTER = 36;
       // Use a public CORS proxy to access Fotmob API (educational use)
       const CORS_PROXY = 'https://corsproxy.io/?';
-      const FOTMOB_API = CORS_PROXY + encodeURIComponent('https://www.fotmob.com/api/data/search/suggest?hits=50&lang=en&term=');
+      const FOTMOB_API = CORS_PROXY + encodeURIComponent('https://www.fotmob.com/api/data/search/suggest?hits=5&lang=en&term=');
       const FOTMOB_PLAYER_API_BASE = CORS_PROXY + encodeURIComponent('https://www.fotmob.com/api/data/playerData?id=');
 
       // --- state ---
