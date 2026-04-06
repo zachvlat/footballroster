@@ -104,7 +104,20 @@
 
     .header-actions {
       display: flex;
-      gap: 8px;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .header-actions-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .action-label {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
     }
 
     .header-btn {
@@ -575,6 +588,16 @@
       pointer-events: none;
     }
 
+    .card-extras {
+      font-size: 0.6rem;
+      color: var(--text-secondary);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100px;
+    }
+
     .empty-slot {
       border: 2px dashed var(--border);
       border-radius: 14px;
@@ -803,12 +826,18 @@
       </svg>
     </button>
     <div class="header-actions">
-      <button class="header-btn" id="exportBtn" title="Export Roster">
-        <svg width="800px" height="800px" viewBox="0 0 1024 1024" class="icon"  version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M768 810.7c-23.6 0-42.7-19.1-42.7-42.7s19.1-42.7 42.7-42.7c94.1 0 170.7-76.6 170.7-170.7 0-89.6-70.1-164.3-159.5-170.1L754 383l-10.7-22.7c-42.2-89.3-133-147-231.3-147s-189.1 57.7-231.3 147L270 383l-25.1 1.6c-89.5 5.8-159.5 80.5-159.5 170.1 0 94.1 76.6 170.7 170.7 170.7 23.6 0 42.7 19.1 42.7 42.7s-19.1 42.7-42.7 42.7c-141.2 0-256-114.8-256-256 0-126.1 92.5-232.5 214.7-252.4C274.8 195.7 388.9 128 512 128s237.2 67.7 297.3 174.2C931.5 322.1 1024 428.6 1024 554.7c0 141.1-114.8 256-256 256z" fill="#3688FF" /><path d="M512 938.7c-10.9 0-21.8-4.2-30.2-12.5l-128-128c-16.7-16.7-16.7-43.7 0-60.3 16.6-16.7 43.7-16.7 60.3 0l97.8 97.8 97.8-97.8c16.6-16.7 43.7-16.7 60.3 0 16.7 16.7 16.7 43.7 0 60.3l-128 128c-8.2 8.3-19.1 12.5-30 12.5z" fill="#5F6379" /><path d="M512 938.7c-23.6 0-42.7-19.1-42.7-42.7V597.3c0-23.6 19.1-42.7 42.7-42.7s42.7 19.1 42.7 42.7V896c0 23.6-19.1 42.7-42.7 42.7z" fill="#5F6379" /></svg>
-      </button>
-      <button class="header-btn" id="importBtn" title="Import Roster">
-        <svg width="800px" height="800px" viewBox="0 0 1024 1024" class="icon"  version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M768 810.7c-23.6 0-42.7-19.1-42.7-42.7s19.1-42.7 42.7-42.7c94.1 0 170.7-76.6 170.7-170.7 0-89.6-70.1-164.3-159.5-170.1L754 383l-10.7-22.7c-42.2-89.3-133-147-231.3-147s-189.1 57.7-231.3 147L270 383l-25.1 1.6c-89.5 5.8-159.5 80.5-159.5 170.1 0 94.1 76.6 170.7 170.7 170.7 23.6 0 42.7 19.1 42.7 42.7s-19.1 42.7-42.7 42.7c-141.2 0-256-114.8-256-256 0-126.1 92.5-232.5 214.7-252.4C274.8 195.7 388.9 128 512 128s237.2 67.7 297.3 174.2C931.5 322.1 1024 428.6 1024 554.7c0 141.1-114.8 256-256 256z" fill="#3688FF" /><path d="M640 789.3c-10.9 0-21.8-4.2-30.2-12.5L512 679l-97.8 97.8c-16.6 16.7-43.7 16.7-60.3 0-16.7-16.7-16.7-43.7 0-60.3l128-128c16.6-16.7 43.7-16.7 60.3 0l128 128c16.7 16.7 16.7 43.7 0 60.3-8.4 8.4-19.3 12.5-30.2 12.5z" fill="#5F6379" /><path d="M512 960c-23.6 0-42.7-19.1-42.7-42.7V618.7c0-23.6 19.1-42.7 42.7-42.7s42.7 19.1 42.7 42.7v298.7c0 23.5-19.1 42.6-42.7 42.6z" fill="#5F6379" /></svg>
-      </button>
+      <div class="header-actions-wrapper">
+        <button class="header-btn" id="exportBtn" title="Export Roster">
+          <svg width="800px" height="800px" viewBox="0 0 1024 1024" class="icon"  version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M768 810.7c-23.6 0-42.7-19.1-42.7-42.7s19.1-42.7 42.7-42.7c94.1 0 170.7-76.6 170.7-170.7 0-89.6-70.1-164.3-159.5-170.1L754 383l-10.7-22.7c-42.2-89.3-133-147-231.3-147s-189.1 57.7-231.3 147L270 383l-25.1 1.6c-89.5 5.8-159.5 80.5-159.5 170.1 0 94.1 76.6 170.7 170.7 170.7 23.6 0 42.7 19.1 42.7 42.7s-19.1 42.7-42.7 42.7c-141.2 0-256-114.8-256-256 0-126.1 92.5-232.5 214.7-252.4C274.8 195.7 388.9 128 512 128s237.2 67.7 297.3 174.2C931.5 322.1 1024 428.6 1024 554.7c0 141.1-114.8 256-256 256z" fill="#3688FF" /><path d="M512 938.7c-10.9 0-21.8-4.2-30.2-12.5l-128-128c-16.7-16.7-16.7-43.7 0-60.3 16.6-16.7 43.7-16.7 60.3 0l97.8 97.8 97.8-97.8c16.6-16.7 43.7-16.7 60.3 0 16.7 16.7 16.7 43.7 0 60.3l-128 128c-8.2 8.3-19.1 12.5-30 12.5z" fill="#5F6379" /><path d="M512 938.7c-23.6 0-42.7-19.1-42.7-42.7V597.3c0-23.6 19.1-42.7 42.7-42.7s42.7 19.1 42.7 42.7V896c0 23.6-19.1 42.7-42.7 42.7z" fill="#5F6379" /></svg>
+        </button>
+        <span class="action-label">Export</span>
+      </div>
+      <div class="header-actions-wrapper">
+        <button class="header-btn" id="importBtn" title="Import Roster">
+          <svg width="800px" height="800px" viewBox="0 0 1024 1024" class="icon"  version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M768 810.7c-23.6 0-42.7-19.1-42.7-42.7s19.1-42.7 42.7-42.7c94.1 0 170.7-76.6 170.7-170.7 0-89.6-70.1-164.3-159.5-170.1L754 383l-10.7-22.7c-42.2-89.3-133-147-231.3-147s-189.1 57.7-231.3 147L270 383l-25.1 1.6c-89.5 5.8-159.5 80.5-159.5 170.1 0 94.1 76.6 170.7 170.7 170.7 23.6 0 42.7 19.1 42.7 42.7s-19.1 42.7-42.7 42.7c-141.2 0-256-114.8-256-256 0-126.1 92.5-232.5 214.7-252.4C274.8 195.7 388.9 128 512 128s237.2 67.7 297.3 174.2C931.5 322.1 1024 428.6 1024 554.7c0 141.1-114.8 256-256 256z" fill="#3688FF" /><path d="M640 789.3c-10.9 0-21.8-4.2-30.2-12.5L512 679l-97.8 97.8c-16.6 16.7-43.7 16.7-60.3 0-16.7-16.7-16.7-43.7 0-60.3l128-128c16.6-16.7 43.7-16.7 60.3 0l128 128c16.7 16.7 16.7 43.7 0 60.3-8.4 8.4-19.3 12.5-30.2 12.5z" fill="#5F6379" /><path d="M512 960c-23.6 0-42.7-19.1-42.7-42.7V618.7c0-23.6 19.1-42.7 42.7-42.7s42.7 19.1 42.7 42.7v298.7c0 23.5-19.1 42.6-42.7 42.6z" fill="#5F6379" /></svg>
+        </button>
+        <span class="action-label">Import</span>
+      </div>
       <input type="file" id="importFileInput" accept=".json">
     </div>
   </header>
@@ -1086,11 +1115,17 @@
             return;
           }
           let html = players.map(p => {
+            const extras = [];
+            if (p.age) extras.push(`${p.age}y`);
+            if (p.nationality) extras.push(p.nationality);
+            if (p.marketValue) extras.push(p.marketValue);
+            const extrasStr = extras.length ? `<div class="card-extras">${extras.join(' · ')}</div>` : '';
             return `<div class="player-card" draggable="true" data-player-id="${p.id}">
               <button class="remove-btn" onclick="window.removePlayerById('${p.id}')">✕</button>
               <img src="${p.imgSrc || 'https://placehold.co/50x50/EEE/31343C.png?text=⚽'}" alt="${p.name}" onerror="this.src='https://placehold.co/50x50/EEE/31343C.png?text=⚽'">
               <div class="card-name">${p.name}</div>
               <div class="card-club">${p.club || 'Free'}</div>
+              ${extrasStr}
             </div>`;
           }).join('');
           const emptyNeeded = Math.max(0, 4 - players.length);
@@ -1328,6 +1363,25 @@
             if (r) rating = Math.round(r.value);
           }
           const team = data.primaryTeam?.teamName || player.teamName || 'Free Agent';
+          
+          let age = null;
+          let nationality = null;
+          let marketValue = null;
+          
+          if (data.playerInformation) {
+            data.playerInformation.forEach(info => {
+              if (info.title === 'Age' && info.value?.numberValue) {
+                age = info.value.numberValue;
+              }
+              if (info.title === 'Country' && info.value?.fallback) {
+                nationality = info.value.fallback;
+              }
+              if (info.title === 'Market value' && info.value?.fallback) {
+                marketValue = info.value.fallback;
+              }
+            });
+          }
+          
           roster.push({
             id: 'api-' + player.id + '-' + Date.now(),
             name: data.name || player.name,
@@ -1335,7 +1389,10 @@
             rating: rating,
             club: team,
             imgSrc: `https://images.fotmob.com/image_resources/playerimages/${player.id}.png`,
-            isCustom: false
+            isCustom: false,
+            age: age,
+            nationality: nationality,
+            marketValue: marketValue
           });
           saveRoster(); renderRoster(); searchInput.value = ''; searchResults.innerHTML = '';
         } catch {
@@ -1346,7 +1403,10 @@
             rating: 75,
             club: player.teamName || 'Free Agent',
             imgSrc: `https://images.fotmob.com/image_resources/playerimages/${player.id}.png`,
-            isCustom: false
+            isCustom: false,
+            age: null,
+            nationality: null,
+            marketValue: null
           });
           saveRoster(); renderRoster(); searchInput.value = ''; searchResults.innerHTML = '';
         }
