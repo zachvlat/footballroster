@@ -708,12 +708,79 @@
       }
     }
 
+    .stats-panel {
+      width: 250px;
+      flex-shrink: 0;
+    }
+
+    .stats-header {
+      margin-bottom: 16px;
+    }
+
+    .stats-header h2 {
+      font-size: 1.3rem;
+    }
+
+    .nationality-stats {
+      background: var(--surface);
+      border-radius: 20px;
+      padding: 16px;
+      border: 2px solid var(--border);
+    }
+
+    .nationality-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .nationality-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .flag {
+      font-size: 1.2rem;
+    }
+
+    .nationality-name {
+      flex: 1;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .nationality-bar-container {
+      flex: 1;
+      height: 8px;
+      background: var(--bg);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .nationality-bar {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 4px;
+      transition: width 0.3s;
+    }
+
+    .nationality-percent {
+      font-size: 0.85rem;
+      font-weight: 600;
+      min-width: 40px;
+      text-align: right;
+    }
+
     @media (max-width: 768px) {
       .container {
         flex-direction: column;
       }
 
       .search-panel {
+        width: 100%;
+      }
+
+      .stats-panel {
         width: 100%;
       }
 
@@ -873,42 +940,49 @@
       </div>
     </div>
 
-    <div class="roster-panel">
-      <div class="roster-header">
-        <h2>Your Roster · drag players</h2>
-        <span class="roster-count"><span id="rosterCount">0</span>/36</span>
-      </div>
-      <div id="rosterFullMessage" style="display:none" class="roster-full-message">
-        Roster is full! Remove a player to add more.
+      <div class="roster-panel">
+        <div class="roster-header">
+          <h2>Your Roster · drag players</h2>
+          <span class="roster-count"><span id="rosterCount">0</span>/36</span>
+        </div>
+        <div id="rosterFullMessage" style="display:none" class="roster-full-message">
+          Roster is full! Remove a player to add more.
+        </div>
+
+        <div class="position-groups" id="positionGroups">
+          <div class="group" data-group="gk" id="group-gk">
+            <div class="group-title">
+              <h3>Goalkeepers</h3><span class="group-badge" id="gkCount">0</span>
+            </div>
+            <div class="group-grid" id="gkGrid"></div>
+          </div>
+          <div class="group" data-group="def" id="group-def">
+            <div class="group-title">
+              <h3>Defenders</h3><span class="group-badge" id="defCount">0</span>
+            </div>
+            <div class="group-grid" id="defGrid"></div>
+          </div>
+          <div class="group" data-group="mid" id="group-mid">
+            <div class="group-title">
+              <h3>Midfielders</h3><span class="group-badge" id="midCount">0</span>
+            </div>
+            <div class="group-grid" id="midGrid"></div>
+          </div>
+          <div class="group" data-group="fwd" id="group-fwd">
+            <div class="group-title">
+              <h3>Attackers</h3><span class="group-badge" id="fwdCount">0</span>
+            </div>
+            <div class="group-grid" id="fwdGrid"></div>
+          </div>
+        </div>
       </div>
 
-      <div class="position-groups" id="positionGroups">
-        <div class="group" data-group="gk" id="group-gk">
-          <div class="group-title">
-            <h3>Goalkeepers</h3><span class="group-badge" id="gkCount">0</span>
-          </div>
-          <div class="group-grid" id="gkGrid"></div>
+      <div class="stats-panel">
+        <div class="stats-header">
+          <h2>Nationalities</h2>
         </div>
-        <div class="group" data-group="def" id="group-def">
-          <div class="group-title">
-            <h3>Defenders</h3><span class="group-badge" id="defCount">0</span>
-          </div>
-          <div class="group-grid" id="defGrid"></div>
-        </div>
-        <div class="group" data-group="mid" id="group-mid">
-          <div class="group-title">
-            <h3>Midfielders</h3><span class="group-badge" id="midCount">0</span>
-          </div>
-          <div class="group-grid" id="midGrid"></div>
-        </div>
-        <div class="group" data-group="fwd" id="group-fwd">
-          <div class="group-title">
-            <h3>Attackers</h3><span class="group-badge" id="fwdCount">0</span>
-          </div>
-          <div class="group-grid" id="fwdGrid"></div>
-        </div>
+        <div id="nationalityStats" class="nationality-stats"></div>
       </div>
-    </div>
   </div>
 
   <!-- modal: custom player -->
@@ -951,10 +1025,8 @@
     (function () {
       // --- constants & config ---
       const MAX_ROSTER = 36;
-      // Use a public CORS proxy to access Fotmob API (educational use)
-      const CORS_PROXY = 'https://corsproxy.io/?';
-      const FOTMOB_API = CORS_PROXY + encodeURIComponent('https://www.fotmob.com/api/data/search/suggest?hits=5&lang=en&term=');
-      const FOTMOB_PLAYER_API_BASE = CORS_PROXY + encodeURIComponent('https://www.fotmob.com/api/data/playerData?id=');
+      const LIVESPORT_API = 'https://s.livesport.services/api/v2/search/?q=';
+      const IMAGE_BASE = 'https://www.livesport.cz/res/image/data/';
 
       // --- state ---
       let roster = [];
@@ -1059,7 +1131,7 @@
 
           playerEl.innerHTML = `
             <img src="${player.imgSrc || 'https://placehold.co/50x50/EEE/31343C.png?text=⚽'}" alt="${player.name}" onerror="this.src='https://placehold.co/50x50/EEE/31343C.png?text=⚽'">
-            <span>${player.name.split(' ').pop() || player.name}</span>
+            <span>${player.name.split(' ')[0] || player.name}</span>
             <span class="remove-mini" onclick="event.stopPropagation(); window.removePlayerFromPitch('${player.id}')">✕</span>
           `;
 
@@ -1087,10 +1159,35 @@
       function getPlayerGroup(position) {
         if (!position) return 'mid';
         const pos = position.toUpperCase().trim();
-        if (pos === 'GK') return 'gk';
-        if (['CB', 'LB', 'RB', 'LCB', 'RCB', 'LWB', 'RWB', 'SW'].some(p => pos.includes(p))) return 'def';
-        if (['ST', 'CF', 'LW', 'RW', 'SS', 'LF', 'RF'].some(p => pos.includes(p))) return 'fwd';
+        if (pos === 'GK' || pos.includes('GOALKEEPER')) return 'gk';
+        if (['CB', 'LB', 'RB', 'LCB', 'RCB', 'LWB', 'RWB', 'SW'].some(p => pos.includes(p)) || pos.includes('DEFENDER')) return 'def';
+        if (['ST', 'CF', 'LW', 'RW', 'SS', 'LF', 'RF'].some(p => pos.includes(p)) || pos.includes('FORWARD') || pos.includes('ATTACKER')) return 'fwd';
+        if (pos.includes('MIDFIELDER')) return 'mid';
         return 'mid';
+      }
+
+      function getFlagEmoji(countryName) {
+        if (!countryName) return '';
+        const codes = {
+          'Afghanistan': 'AF', 'Albania': 'AL', 'Algeria': 'DZ', 'Angola': 'AO', 'Argentina': 'AR',
+          'Australia': 'AU', 'Austria': 'AT', 'Belgium': 'BE', 'Bolivia': 'BO', 'Bosnia and Herzegovina': 'BA',
+          'Brazil': 'BR', 'Bulgaria': 'BG', 'Cameroon': 'CM', 'Canada': 'CA', 'Chile': 'CL', 'China': 'CN',
+          'Colombia': 'CO', 'Costa Rica': 'CR', 'Croatia': 'HR', 'Czech Republic': 'CZ', 'Denmark': 'DK',
+          'Ecuador': 'EC', 'Egypt': 'EG', 'England': 'GB', 'Estonia': 'EE', 'Finland': 'FI', 'France': 'FR',
+          'Germany': 'DE', 'Ghana': 'GH', 'Greece': 'GR', 'Guatemala': 'GT', 'Honduras': 'HN', 'Hungary': 'HU',
+          'Iceland': 'IS', 'India': 'IN', 'Indonesia': 'ID', 'Iran': 'IR', 'Ireland': 'IE', 'Israel': 'IL',
+          'Italy': 'IT', 'Ivory Coast': 'CI', 'Japan': 'JP', 'Kazakhstan': 'KZ', 'Kenya': 'KE', 'South Korea': 'KR',
+          'Latvia': 'LV', 'Lithuania': 'LT', 'Luxembourg': 'LU', 'Macedonia': 'MK', 'Malaysia': 'MY', 'Mali': 'ML',
+          'Mexico': 'MX', 'Moldova': 'MD', 'Montenegro': 'ME', 'Morocco': 'MA', 'Netherlands': 'NL', 'New Zealand': 'NZ',
+          'Nicaragua': 'NI', 'Nigeria': 'NG', 'North Korea': 'KP', 'Norway': 'NO', 'Panama': 'PA', 'Paraguay': 'PY',
+          'Peru': 'PE', 'Poland': 'PL', 'Portugal': 'PT', 'Romania': 'RO', 'Russia': 'RU', 'Saudi Arabia': 'SA',
+          'Scotland': 'GB', 'Serbia': 'RS', 'Slovakia': 'SK', 'Slovenia': 'SI', 'South Africa': 'ZA', 'Spain': 'ES',
+          'Sweden': 'SE', 'Switzerland': 'CH', 'Tunisia': 'TN', 'Turkey': 'TR', 'Ukraine': 'UA', 'USA': 'US',
+          'Uruguay': 'UY', 'Venezuela': 'VE', 'Wales': 'GB'
+        };
+        const code = codes[countryName];
+        if (!code) return countryName;
+        return code.split('').map(c => String.fromCodePoint(c.charCodeAt(0) + 127397)).join('');
       }
 
       function renderRoster() {
@@ -1117,7 +1214,7 @@
           let html = players.map(p => {
             const extras = [];
             if (p.age) extras.push(`${p.age}y`);
-            if (p.nationality) extras.push(p.nationality);
+            if (p.nationality) extras.push(getFlagEmoji(p.nationality));
             if (p.marketValue) extras.push(p.marketValue);
             const extrasStr = extras.length ? `<div class="card-extras">${extras.join(' · ')}</div>` : '';
             return `<div class="player-card" draggable="true" data-player-id="${p.id}">
@@ -1146,6 +1243,36 @@
         // Clean up pitch players that are no longer in roster
         pitchPlayers = pitchPlayers.filter(p => roster.some(r => r.id === p.playerId));
         renderPitchPlayers();
+        renderNationalityStats();
+      }
+
+      function renderNationalityStats() {
+        const container = document.getElementById('nationalityStats');
+        if (!container) return;
+
+        const total = roster.length;
+        if (total === 0) {
+          container.innerHTML = '<div style="text-align:center;color:var(--text-secondary);font-size:0.85rem;">No players yet</div>';
+          return;
+        }
+
+        const counts = {};
+        roster.forEach(p => {
+          const nat = p.nationality || 'Unknown';
+          counts[nat] = (counts[nat] || 0) + 1;
+        });
+
+        const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+        container.innerHTML = sorted.map(([nat, count]) => {
+          const pct = ((count / total) * 100).toFixed(1);
+          const flag = getFlagEmoji(nat);
+          return `<div class="nationality-item">
+            <span class="flag">${flag || '🏳️'}</span>
+            <span class="nationality-name">${nat} [${count}]</span>
+            <div class="nationality-bar-container"><div class="nationality-bar" style="width:${pct}%"></div></div>
+            <span class="nationality-percent">${pct}%</span>
+          </div>`;
+        }).join('');
       }
 
       function handleDragStart(e) {
@@ -1320,11 +1447,10 @@
 
       async function searchPlayers(query) {
         try {
-          const url = FOTMOB_API + encodeURIComponent(query);
-          const res = await fetch(url);
+          const res = await fetch(LIVESPORT_API + encodeURIComponent(query));
           if (!res.ok) throw new Error();
           const data = await res.json();
-          const players = (data[0]?.suggestions || []).filter(s => s.type === 'player');
+          const players = data.filter(p => p.sport?.name === "Soccer" && p.participantTypes?.some(t => t.name === "Player"));
           if (players.length) renderSearchResults(players);
           else renderNoResults(query);
         } catch { searchResults.innerHTML = '<div class="search-message">Unable to search players</div>'; }
@@ -1333,83 +1459,41 @@
       function renderSearchResults(players) {
         searchResults.innerHTML = players.map(p => {
           const safe = JSON.stringify(p).replace(/"/g, '&quot;');
+          const imgSrc = p.images?.length ? IMAGE_BASE + p.images[0].path : 'https://placehold.co/50x50/EEE/31343C.png?text=⚽';
+          const position = p.participantTypes?.map(t => t.name).filter(n => n !== 'Player').join(', ') || '-';
+          const team = p.teams?.length ? p.teams.map(t => t.name).join(', ') : 'Free';
           return `<div class="search-result-item" onclick="window.addPlayerFromApi(${safe})">
-            <img src="https://images.fotmob.com/image_resources/playerimages/${p.id}.png" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 100 100\\'%3E%3Ccircle cx=\\'50\\' cy=\\'50\\' r=\\'40\\' fill=\\'%23ddd\\'/%3E%3Ctext x=\\'50\\' y=\\'55\\' text-anchor=\\'middle\\' font-size=\\'30\\'%3E⚽%3C/text%3E%3C/svg%3E'">
-            <div class="player-info"><div class="player-name">${p.name}</div><div class="player-meta"><span class="position-badge">-</span><span>${p.teamName || 'Free'}</span></div></div></div>`;
+            <img src="${imgSrc}" onerror="this.src='https://placehold.co/50x50/EEE/31343C.png?text=⚽'">
+            <div class="player-info"><div class="player-name">${p.name}</div><div class="player-meta"><span class="position-badge">${position}</span><span>${team}</span></div></div></div>`;
         }).join('');
       }
       function renderNoResults(query) {
         searchResults.innerHTML = `<div class="search-message">No players for "${query}"</div><button class="add-custom-btn" onclick="openModal('${query}')">Add Custom Player</button>`;
       }
 
-      window.addPlayerFromApi = async function (player) {
+      window.addPlayerFromApi = function (player) {
         if (roster.length >= MAX_ROSTER) { rosterFullMessage.style.display = 'block'; return; }
         rosterFullMessage.style.display = 'none';
-        searchResults.innerHTML = '<div class="search-message">Loading player data...</div>';
-        try {
-          const res = await fetch(FOTMOB_PLAYER_API_BASE + player.id);
-          if (!res.ok) throw new Error();
-          const data = await res.json();
-          let position = '-';
-          if (data.positionDescription) {
-            if (data.positionDescription.positions?.length) {
-              const main = data.positionDescription.positions.find(p => p.isMainPosition) || data.positionDescription.positions[0];
-              position = main.strPos?.label || main.strPosShort?.label || '-';
-            } else if (data.positionDescription.primaryPosition) position = data.positionDescription.primaryPosition.label || '-';
-          }
-          let rating = 75;
-          if (data.mainLeague?.stats) {
-            const r = data.mainLeague.stats.find(s => s.localizedTitleId === 'rating');
-            if (r) rating = Math.round(r.value);
-          }
-          const team = data.primaryTeam?.teamName || player.teamName || 'Free Agent';
-          
-          let age = null;
-          let nationality = null;
-          let marketValue = null;
-          
-          if (data.playerInformation) {
-            data.playerInformation.forEach(info => {
-              if (info.title === 'Age' && info.value?.numberValue) {
-                age = info.value.numberValue;
-              }
-              if (info.title === 'Country' && info.value?.fallback) {
-                nationality = info.value.fallback;
-              }
-              if (info.title === 'Market value' && info.value?.fallback) {
-                marketValue = info.value.fallback;
-              }
-            });
-          }
-          
-          roster.push({
-            id: 'api-' + player.id + '-' + Date.now(),
-            name: data.name || player.name,
-            position: position,
-            rating: rating,
-            club: team,
-            imgSrc: `https://images.fotmob.com/image_resources/playerimages/${player.id}.png`,
-            isCustom: false,
-            age: age,
-            nationality: nationality,
-            marketValue: marketValue
-          });
-          saveRoster(); renderRoster(); searchInput.value = ''; searchResults.innerHTML = '';
-        } catch {
-          roster.push({
-            id: 'api-fb-' + player.id + '-' + Date.now(),
-            name: player.name,
-            position: '-',
-            rating: 75,
-            club: player.teamName || 'Free Agent',
-            imgSrc: `https://images.fotmob.com/image_resources/playerimages/${player.id}.png`,
-            isCustom: false,
-            age: null,
-            nationality: null,
-            marketValue: null
-          });
-          saveRoster(); renderRoster(); searchInput.value = ''; searchResults.innerHTML = '';
-        }
+
+        const position = player.participantTypes?.map(t => t.name).filter(n => n !== 'Player').join(', ') || '-';
+        const team = player.teams?.length ? player.teams.map(t => t.name).join(', ') : 'Free Agent';
+        const country = player.defaultCountry?.name || null;
+        const imgSrc = player.images?.length ? IMAGE_BASE + player.images[0].path : null;
+
+        roster.push({
+          id: 'api-ls-' + player.id + '-' + Date.now(),
+          name: player.name,
+          position: position,
+          rating: 75,
+          club: team,
+          imgSrc: imgSrc,
+          isCustom: false,
+          age: null,
+          nationality: country,
+          marketValue: null
+        });
+
+        saveRoster(); renderRoster(); searchInput.value = ''; searchResults.innerHTML = '';
       };
 
       searchInput.addEventListener('input', (e) => {
