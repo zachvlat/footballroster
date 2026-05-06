@@ -361,17 +361,19 @@
 
     .pitch-player {
       background: var(--surface);
-      border-radius: 30px;
-      padding: 4px 8px 4px 4px;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 4px;
-      font-size: 0.7rem;
+      justify-content: center;
+      gap: 2px;
+      font-size: 0.6rem;
       font-weight: 600;
       border: 2px solid var(--primary);
       box-shadow: 0 2px 8px var(--shadow);
       cursor: grab;
-      max-width: 90%;
       pointer-events: all;
       z-index: 10;
       position: relative;
@@ -387,26 +389,41 @@
     }
 
     .pitch-player img {
-      width: 20px;
-      height: 20px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
       object-fit: cover;
       background: var(--bg);
     }
 
+    .pitch-player-name {
+      max-width: 50px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-align: center;
+    }
+
     .pitch-player .remove-mini {
+      position: absolute;
+      top: -4px;
+      right: -4px;
       width: 16px;
       height: 16px;
       border-radius: 50%;
       background: var(--surface);
       border: 1px solid var(--border);
       color: var(--text-secondary);
-      display: flex;
+      display: none;
       align-items: center;
       justify-content: center;
       font-size: 10px;
       cursor: pointer;
-      margin-left: 2px;
+      z-index: 20;
+    }
+
+    .pitch-player:hover .remove-mini {
+      display: flex;
     }
 
     .pitch-player .remove-mini:hover {
@@ -1131,7 +1148,7 @@
 
           playerEl.innerHTML = `
             <img src="${player.imgSrc || 'https://placehold.co/50x50/EEE/31343C.png?text=⚽'}" alt="${player.name}" onerror="this.src='https://placehold.co/50x50/EEE/31343C.png?text=⚽'">
-            <span>${player.name.split(' ')[0] || player.name}</span>
+            <span class="pitch-player-name">${player.name.split(' ')[0] || player.name}</span>
             <span class="remove-mini" onclick="event.stopPropagation(); window.removePlayerFromPitch('${player.id}')">✕</span>
           `;
 
@@ -1362,7 +1379,7 @@
       }
 
       function loadTheme() {
-        const savedTheme = localStorage.getItem('theme') || 'light';
+        const savedTheme = localStorage.getItem('theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
         updateThemeIcon(savedTheme);
       }
@@ -1457,7 +1474,8 @@
       }
 
       function renderSearchResults(players) {
-        searchResults.innerHTML = players.map(p => {
+        const limited = players.slice(0, 3);
+        searchResults.innerHTML = limited.map(p => {
           const safe = JSON.stringify(p).replace(/"/g, '&quot;');
           const imgSrc = p.images?.length ? IMAGE_BASE + p.images[0].path : 'https://placehold.co/50x50/EEE/31343C.png?text=⚽';
           const position = p.participantTypes?.map(t => t.name).filter(n => n !== 'Player').join(', ') || '-';
