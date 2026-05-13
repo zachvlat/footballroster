@@ -1147,7 +1147,7 @@
           playerEl.dataset.fromPitch = 'true';
 
           playerEl.innerHTML = `
-            <img src="${player.imgSrc || 'https://placehold.co/50x50/EEE/31343C.png?text=⚽'}" alt="${player.name}" onerror="this.src='https://placehold.co/50x50/EEE/31343C.png?text=⚽'">
+            <img src="${player.imgSrc || 'https://placehold.co/50x50/EEE/31343C.png?text=_'}" alt="${player.name}" onerror="this.src='https://placehold.co/50x50/EEE/31343C.png?text=_'">
             <span class="pitch-player-name">${player.name.split(' ')[0] || player.name}</span>
             <span class="remove-mini" onclick="event.stopPropagation(); window.removePlayerFromPitch('${player.id}')">✕</span>
           `;
