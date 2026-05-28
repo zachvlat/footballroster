@@ -948,7 +948,8 @@
           <!-- Markings (visual only) -->
           <div class="pitch-markings">
             <img src="https://img.freepik.com/premium-vector/soccer-football-field_58199-54.jpg" alt="Football pitch"
-              style="width: 100%; height: 100%; object-fit: cover; opacity: 0.9;">
+              style="width: 100%; height: 100%; object-fit: cover; opacity: 0.9;"
+              onerror="fallbackImg(this)">
           </div>
 
           <!-- Drop zones grid (5 rows x 3 columns for tactical positioning) -->
@@ -1073,6 +1074,21 @@
       let draggedPlayerId = null;
       let draggedFromPitch = false;
 
+      // --- Image fallback function ---
+      window.fallbackImg = function(imgEl) {
+        // Create a black div with the same dimensions and border-radius as the image
+        const div = document.createElement('div');
+        div.style.width = imgEl.offsetWidth + 'px';
+        div.style.height = imgEl.offsetHeight + 'px';
+        div.style.background = '#000';
+        div.style.display = getComputedStyle(imgEl).display;
+        div.style.borderRadius = getComputedStyle(imgEl).borderRadius;
+        // Replace the image with the black div
+        if (imgEl.parentNode) {
+          imgEl.parentNode.replaceChild(div, imgEl);
+        }
+      };
+
       // Initialize pitch grid (5 rows x 3 columns)
       function initPitchGrid() {
         if (!pitchDropZones) return;
@@ -1147,7 +1163,7 @@
           playerEl.dataset.fromPitch = 'true';
 
           playerEl.innerHTML = `
-            <img src="${player.imgSrc || 'https://placehold.co/50x50/EEE/31343C.png?text=_'}" alt="${player.name}" onerror="this.src='https://placehold.co/50x50/EEE/31343C.png?text=_'">
+            <img src="${player.imgSrc || 'unknown.png'}" alt="${player.name}" onerror="fallbackImg(this)">
             <span class="pitch-player-name">${player.name.split(' ')[0] || player.name}</span>
             <span class="remove-mini" onclick="event.stopPropagation(); window.removePlayerFromPitch('${player.id}')">✕</span>
           `;
@@ -1236,7 +1252,7 @@
             const extrasStr = extras.length ? `<div class="card-extras">${extras.join(' · ')}</div>` : '';
             return `<div class="player-card" draggable="true" data-player-id="${p.id}">
               <button class="remove-btn" onclick="window.removePlayerById('${p.id}')">✕</button>
-              <img src="${p.imgSrc || 'https://placehold.co/50x50/EEE/31343C.png?text=_'}" alt="${p.name}" onerror="this.src='https://placehold.co/50x50/EEE/31343C.png?text=_'">
+              <img src="${p.imgSrc || 'unknown.png'}" alt="${p.name}" onerror="fallbackImg(this)">
               <div class="card-name">${p.name}</div>
               <div class="card-club">${p.club || 'Free'}</div>
               ${extrasStr}
@@ -1477,11 +1493,11 @@
         const limited = players.slice(0, 3);
         searchResults.innerHTML = limited.map(p => {
           const safe = JSON.stringify(p).replace(/"/g, '&quot;');
-          const imgSrc = p.images?.length ? IMAGE_BASE + p.images[0].path : 'https://placehold.co/50x50/EEE/31343C.png?text=_';
+          const imgSrc = p.images?.length ? IMAGE_BASE + p.images[0].path : 'unknown.png';
           const position = p.participantTypes?.map(t => t.name).filter(n => n !== 'Player').join(', ') || '-';
           const team = p.teams?.length ? p.teams.map(t => t.name).join(', ') : 'Free';
           return `<div class="search-result-item" onclick="window.addPlayerFromApi(${safe})">
-            <img src="${imgSrc}" onerror="this.src='https://placehold.co/50x50/EEE/31343C.png?text=_'">
+            <img src="${imgSrc}" onerror="fallbackImg(this)">
             <div class="player-info"><div class="player-name">${p.name}</div><div class="player-meta"><span class="position-badge">${position}</span><span>${team}</span></div></div></div>`;
         }).join('');
       }
