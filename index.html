@@ -966,7 +966,6 @@
       </div>
       <div class="search-results" id="searchResults"></div>
 
-      <!-- VERTICAL PITCH with drop zones -->
       <div class="pitch-container">
         <div class="pitch-title">
           <svg viewBox="0 0 24 24">
@@ -975,14 +974,11 @@
           <span>Drag players onto pitch</span>
         </div>
         <div class="vertical-pitch" id="pitch">
-          <!-- Markings (visual only) -->
           <div class="pitch-markings">
             <img src="https://img.freepik.com/premium-vector/soccer-football-field_58199-54.jpg" alt="Football pitch"
               style="width: 100%; height: 100%; object-fit: cover; opacity: 0.9;"
               onerror="fallbackImg(this)">
           </div>
-
-          <!-- Drop zones grid (5 rows x 3 columns for tactical positioning) -->
           <div class="pitch-drop-zones" id="pitchDropZones"></div>
         </div>
       </div>
@@ -1033,7 +1029,6 @@
       </div>
   </div>
 
-  <!-- modal: custom player -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
       <h3>Add Custom Player</h3>
@@ -1069,19 +1064,16 @@
     </div>
   </div>
 
-  <script>
+<script>
     (function () {
-      // --- constants & config ---
       const MAX_ROSTER = 36;
       const LIVESPORT_API = 'https://s.livesport.services/api/v2/search/?q=';
       const IMAGE_BASE = 'https://www.livesport.cz/res/image/data/';
 
-      // --- state ---
       let roster = [];
-      let pitchPlayers = []; // players placed on pitch { playerId, row, col }
+      let pitchPlayers = [];
       let searchTimeout = null;
 
-      // --- DOM elements ---
       const searchInput = document.getElementById('searchInput');
       const searchResults = document.getElementById('searchResults');
       const rosterCountSpan = document.getElementById('rosterCount');
@@ -1106,7 +1098,6 @@
       let draggedPlayerId = null;
       let draggedFromPitch = false;
 
-      // --- encode/decode helpers for URL sharing ---
       function encodeData(obj) {
         const json = JSON.stringify(obj);
         const bytes = new TextEncoder().encode(json);
@@ -1133,7 +1124,6 @@
         toast._hide = setTimeout(() => toast.classList.remove('active'), 2500);
       }
 
-      // --- share button: copy URL with roster data ---
       shareBtn.addEventListener('click', () => {
         const data = { roster, pitchPlayers };
         const encoded = encodeData(data);
@@ -1158,7 +1148,6 @@
         document.body.removeChild(ta);
       }
 
-      // --- load from URL param if present ---
       function loadFromUrl() {
         const params = new URLSearchParams(window.location.search);
         const encoded = params.get('roster');
@@ -1178,22 +1167,18 @@
         return false;
       }
 
-      // --- Image fallback function ---
       window.fallbackImg = function(imgEl) {
-        // Create a black div with the same dimensions and border-radius as the image
         const div = document.createElement('div');
         div.style.width = imgEl.offsetWidth + 'px';
         div.style.height = imgEl.offsetHeight + 'px';
         div.style.background = '#000';
         div.style.display = getComputedStyle(imgEl).display;
         div.style.borderRadius = getComputedStyle(imgEl).borderRadius;
-        // Replace the image with the black div
         if (imgEl.parentNode) {
           imgEl.parentNode.replaceChild(div, imgEl);
         }
       };
 
-      // Initialize pitch grid (5 rows x 3 columns)
       function initPitchGrid() {
         if (!pitchDropZones) return;
         let html = '';
@@ -1206,7 +1191,6 @@
         }
         pitchDropZones.innerHTML = html;
 
-        // Add drop listeners to cells
         document.querySelectorAll('.pitch-cell').forEach(cell => {
           cell.addEventListener('dragover', (e) => {
             e.preventDefault();
@@ -1226,29 +1210,25 @@
             const row = cell.dataset.row;
             const col = cell.dataset.col;
 
-            // Check if player exists in roster
             const playerIndex = roster.findIndex(p => p.id === playerId);
             if (playerIndex === -1) return;
 
-            // Remove player from any existing pitch position
             pitchPlayers = pitchPlayers.filter(p => p.playerId !== playerId);
 
-            // Add to new position
             pitchPlayers.push({
               playerId: playerId,
               row: parseInt(row),
               col: parseInt(col)
             });
 
+            saveRoster();
             renderPitchPlayers();
             draggedPlayerId = null;
           });
         });
       }
 
-      // Render players on pitch
       function renderPitchPlayers() {
-        // Clear all cells first
         document.querySelectorAll('.pitch-cell').forEach(cell => {
           cell.innerHTML = '';
         });
@@ -1290,6 +1270,7 @@
 
       window.removePlayerFromPitch = function (playerId) {
         pitchPlayers = pitchPlayers.filter(p => p.playerId !== playerId);
+        saveRoster();
         renderPitchPlayers();
       };
 
@@ -1378,7 +1359,6 @@
         renderGroupGrid(midGrid, midPlayers);
         renderGroupGrid(fwdGrid, fwdPlayers);
 
-        // Clean up pitch players that are no longer in roster
         pitchPlayers = pitchPlayers.filter(p => roster.some(r => r.id === p.playerId));
         renderPitchPlayers();
         renderNationalityStats();
@@ -1413,14 +1393,12 @@
         }).join('');
       }
 
-      // --- Double‑click handler to search on Transfermarkt using the first name part ---
       function handleCardDoubleClick(e) {
         const card = e.target.closest('.player-card');
         if (!card) return;
         const playerId = card.dataset.playerId;
         const player = roster.find(p => p.id === playerId);
         if (player && player.name) {
-          // Use only the first part of the name (surname / first name)
           const surname = player.name.split(' ')[0];
           const query = encodeURIComponent(surname);
           window.open(`https://www.transfermarkt.com/schnellsuche/ergebnis/schnellsuche?query=${query}`, '_blank');
@@ -1656,18 +1634,17 @@
         searchTimeout = setTimeout(() => searchPlayers(q), 300);
       });
 
-      // Initialize
-      // Try URL param first; if none, fall back to localStorage
       loadTheme();
+
+      initPitchGrid();
+
       if (!loadFromUrl()) {
         loadRoster();
-        initPitchGrid();
         renderRoster();
-        setupDropZones();
-      } else {
-        initPitchGrid();
-        setupDropZones();
       }
+
+      setupDropZones();
+
     })();
   </script>
 </body>
