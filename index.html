@@ -788,6 +788,28 @@
       text-align: right;
     }
 
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--surface);
+      border: 2px solid var(--primary);
+      color: var(--text);
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-weight: 600;
+      box-shadow: 0 4px 16px var(--shadow);
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.2s;
+      z-index: 200;
+    }
+    .toast.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
     @media (max-width: 768px) {
       .container {
         flex-direction: column;
@@ -863,7 +885,7 @@
           d="M200.747052 605.769466c-5.724543 0-10.814277-4.073016-11.897547-9.901995-3.581551-19.243925-5.395876-39.003888-5.395876-58.734158 0-175.927048 143.12893-319.055978 319.058026-319.055978 73.056266 0 141.797879 24.029565 198.791431 69.488026 5.232054 4.170285 6.09007 11.795159 1.916713 17.025165-4.165166 5.232054-11.79004 6.092118-17.025165 1.916713-52.658422-41.998752-116.175148-64.198634-183.684003-64.198634-162.567392 0-294.825732 132.256291-294.825732 294.823684 0 18.247684 1.677124 36.515846 4.985298 54.301758 1.225591 6.578463-3.115683 12.905051-9.694146 14.12757-0.74846 0.139248-1.494873 0.207849-2.228999 0.207849zM228.084791 686.871422a12.113587 12.113587 0 0 1-10.837827-6.680851 318.733454 318.733454 0 0 1-14.835074-34.471148c-2.277121-6.291775 0.97781-13.238837 7.27061-15.515958 6.294847-2.26893 13.238837 0.97781 15.515958 7.27061a294.2114 294.2114 0 0 0 13.703681 31.84181c3.003056 5.97949 0.591806 13.260339-5.389732 16.265442a12.082871 12.082871 0 0 1-5.427616 1.290095zM776.280161 688.162542c-1.846065 0-3.720799-0.422865-5.479835-1.317741-5.96618-3.034796-8.342618-10.327931-5.310893-16.291039 21.131969-41.569744 31.846929-86.457901 31.846929-133.420449 0-50.546147-13.00232-100.407314-37.602188-144.187627-3.278481-5.832051-1.207161-13.220407 4.627961-16.49684 5.832051-3.273361 13.223479-1.204089 16.496841 4.627961 26.632281 47.396676 40.709681 101.361576 40.70968 156.056506 0 50.814405-11.600621 99.399811-34.476266 144.401619a12.115635 12.115635 0 0 1-10.812229 6.62761zM749.081671 366.40965a12.098229 12.098229 0 0 1-9.952166-5.190075c-6.045019-8.676404-9.368551-12.620411-14.984561-18.702289-4.53786-4.916697-4.233766-12.581503 0.683955-17.122434 4.91465-4.53786 12.578431-4.235814 17.122434 0.683955 6.157646 6.673685 10.283904 11.558641 17.062026 21.289648 3.825236 5.490073 2.474731 13.041227-3.015343 16.867487a12.066489 12.066489 0 0 1-6.916345 2.173708zM884.840674 690.042395H849.83813c-6.692114 0-12.115635-5.424544-12.115635-12.115635s5.424544-12.115635 12.115635-12.115635h35.00152c6.692114 0 12.115635 5.424544 12.115635 12.115635s-5.423521 12.115635-12.114611 12.115635z"
           fill="" />
         <path
-          d="M809.451997 690.042395H478.277313c-6.692114 0-12.115635-5.424544-12.115635-12.115635s5.424544-12.115635 12.115635-12.115635h331.17366c6.692114 0 12.115635 5.424544 12.115636 12.115635s-5.423521 12.115635-12.114612 12.115635zM435.198362 690.042395H134.542627c-6.692114 0-12.115635-5.424544-12.115635-12.115635s5.424544-12.115635 12.115635-12.115635h300.655735c6.692114 0 12.115635 5.424544 12.115635 12.115635s-5.423521 12.115635-12.115635 12.115635zM723.293071 747.480314H623.672101c-6.692114 0-12.115635-5.424544-12.115635-12.115635s5.424544-12.115635 12.115635-12.115635h99.62097c6.692114 0 12.115635 5.424544 12.115635 12.115635s-5.423521 12.115635-12.115635 12.115635zM576.775081 747.480314H203.792087c-6.692114 0-12.115635-5.424544-12.115635-12.115635s5.424544-12.115635 12.115635-12.115635h372.982994c6.692114 0 12.115635 5.424544 12.115635 12.115635s-5.423521 12.115635-12.115635 12.115635zM647.231702 812.995664H359.809685c-6.692114 0-12.115635-5.424544-12.115635-12.115635s5.424544-12.115635 12.115635-12.115635H647.231702c6.692114 0 12.115635 5.424544 12.115635 12.115635s-5.424544 12.115635-12.115635 12.115635zM317.911274 812.995664h-36.18206c-6.692114 0-12.115635-5.424544-12.115635-12.115635s5.424544-12.115635 12.115635-12.115635h36.18206c6.692114 0 12.115635 5.424544 12.115635 12.115635s-5.424544 12.115635-12.115635 12.115635zM555.909322 865.948966H428.46734c-6.692114 0-12.115635-5.424544-12.115635-12.115635s5.424544-12.115635 12.115635-12.115635h127.441982c6.692114 0 12.115635 5.424544 12.115635 12.115635s-5.424544 12.115635-12.115635 12.115635z"
+          d="M809.451997 690.042395H478.277313c-6.692114 0-12.115635-5.424544-12.115635-12.115635s5.424544-12.115635 12.115635-12.115635h331.17366c6.692114 0 12.115635 5.424544 12.115635 12.115635s-5.423521 12.115635-12.114612 12.115635zM435.198362 690.042395H134.542627c-6.692114 0-12.115635-5.424544-12.115635-12.115635s5.424544-12.115635 12.115635-12.115635h300.655735c6.692114 0 12.115635 5.424544 12.115635 12.115635s-5.423521 12.115635-12.115635 12.115635zM723.293071 747.480314H623.672101c-6.692114 0-12.115635-5.424544-12.115635-12.115635s5.424544-12.115635 12.115635-12.115635h99.62097c6.692114 0 12.115635 5.424544 12.115635 12.115635s-5.423521 12.115635-12.115635 12.115635zM576.775081 747.480314H203.792087c-6.692114 0-12.115635-5.424544-12.115635-12.115635s5.424544-12.115635 12.115635-12.115635h372.982994c6.692114 0 12.115635 5.424544 12.115635 12.115635s-5.423521 12.115635-12.115635 12.115635zM647.231702 812.995664H359.809685c-6.692114 0-12.115635-5.424544-12.115635-12.115635s5.424544-12.115635 12.115635-12.115635H647.231702c6.692114 0 12.115635 5.424544 12.115635 12.115635s-5.424544 12.115635-12.115635 12.115635zM317.911274 812.995664h-36.18206c-6.692114 0-12.115635-5.424544-12.115635-12.115635s5.424544-12.115635 12.115635-12.115635h36.18206c6.692114 0 12.115635 5.424544 12.115635 12.115635s-5.424544 12.115635-12.115635 12.115635zM555.909322 865.948966H428.46734c-6.692114 0-12.115635-5.424544-12.115635-12.115635s5.424544-12.115635 12.115635-12.115635h127.441982c6.692114 0 12.115635 5.424544 12.115635 12.115635s-5.424544 12.115635-12.115635 12.115635z"
           fill="" />
       </svg>
       <svg class="moon-icon" width="800px" height="800px" viewBox="0 0 1024 1024" class="icon" version="1.1"
@@ -911,6 +933,12 @@
     </button>
     <div class="header-actions">
       <div class="header-actions-wrapper">
+        <button class="header-btn" id="shareBtn" title="Share Roster URL">
+          <img src="https://img.icons8.com/?size=48&id=12771&format=png" style="width: 20px;">
+        </button>
+        <span class="action-label">Share</span>
+      </div>
+      <div class="header-actions-wrapper">
         <button class="header-btn" id="exportBtn" title="Export Roster">
           <svg width="800px" height="800px" viewBox="0 0 1024 1024" class="icon"  version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M768 810.7c-23.6 0-42.7-19.1-42.7-42.7s19.1-42.7 42.7-42.7c94.1 0 170.7-76.6 170.7-170.7 0-89.6-70.1-164.3-159.5-170.1L754 383l-10.7-22.7c-42.2-89.3-133-147-231.3-147s-189.1 57.7-231.3 147L270 383l-25.1 1.6c-89.5 5.8-159.5 80.5-159.5 170.1 0 94.1 76.6 170.7 170.7 170.7 23.6 0 42.7 19.1 42.7 42.7s-19.1 42.7-42.7 42.7c-141.2 0-256-114.8-256-256 0-126.1 92.5-232.5 214.7-252.4C274.8 195.7 388.9 128 512 128s237.2 67.7 297.3 174.2C931.5 322.1 1024 428.6 1024 554.7c0 141.1-114.8 256-256 256z" fill="#3688FF" /><path d="M512 938.7c-10.9 0-21.8-4.2-30.2-12.5l-128-128c-16.7-16.7-16.7-43.7 0-60.3 16.6-16.7 43.7-16.7 60.3 0l97.8 97.8 97.8-97.8c16.6-16.7 43.7-16.7 60.3 0 16.7 16.7 16.7 43.7 0 60.3l-128 128c-8.2 8.3-19.1 12.5-30 12.5z" fill="#5F6379" /><path d="M512 938.7c-23.6 0-42.7-19.1-42.7-42.7V597.3c0-23.6 19.1-42.7 42.7-42.7s42.7 19.1 42.7 42.7V896c0 23.6-19.1 42.7-42.7 42.7z" fill="#5F6379" /></svg>
         </button>
@@ -925,6 +953,8 @@
       <input type="file" id="importFileInput" accept=".json">
     </div>
   </header>
+
+  <div class="toast" id="toast"></div>
 
   <div class="container">
     <div class="search-panel">
@@ -1061,6 +1091,8 @@
       const themeToggle = document.getElementById('themeToggle');
       const cancelBtn = document.getElementById('cancelBtn');
       const pitchDropZones = document.getElementById('pitchDropZones');
+      const shareBtn = document.getElementById('shareBtn');
+      const toast = document.getElementById('toast');
 
       const gkGrid = document.getElementById('gkGrid');
       const defGrid = document.getElementById('defGrid');
@@ -1073,6 +1105,78 @@
 
       let draggedPlayerId = null;
       let draggedFromPitch = false;
+
+      // --- encode/decode helpers for URL sharing ---
+      function encodeData(obj) {
+        const json = JSON.stringify(obj);
+        const bytes = new TextEncoder().encode(json);
+        let binary = '';
+        for (let i = 0; i < bytes.length; i++) {
+          binary += String.fromCharCode(bytes[i]);
+        }
+        return btoa(binary);
+      }
+
+      function decodeData(str) {
+        const binary = atob(str);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) {
+          bytes[i] = binary.charCodeAt(i);
+        }
+        return JSON.parse(new TextDecoder().decode(bytes));
+      }
+
+      function showToast(msg) {
+        toast.textContent = msg;
+        toast.classList.add('active');
+        clearTimeout(toast._hide);
+        toast._hide = setTimeout(() => toast.classList.remove('active'), 2500);
+      }
+
+      // --- share button: copy URL with roster data ---
+      shareBtn.addEventListener('click', () => {
+        const data = { roster, pitchPlayers };
+        const encoded = encodeData(data);
+        const url = new URL(window.location.href);
+        url.searchParams.set('roster', encoded);
+        navigator.clipboard.writeText(url.toString()).then(() => {
+          showToast('Share URL copied to clipboard!');
+        }).catch(() => {
+          fallbackCopy(url.toString());
+        });
+      });
+
+      function fallbackCopy(text) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); showToast('Share URL copied to clipboard!'); }
+        catch { showToast('Could not copy automatically'); }
+        document.body.removeChild(ta);
+      }
+
+      // --- load from URL param if present ---
+      function loadFromUrl() {
+        const params = new URLSearchParams(window.location.search);
+        const encoded = params.get('roster');
+        if (!encoded) return false;
+        try {
+          const data = decodeData(encoded);
+          if (data.roster && Array.isArray(data.roster)) {
+            roster = data.roster;
+            pitchPlayers = data.pitchPlayers || [];
+            saveRoster();
+            renderRoster();
+            return true;
+          }
+        } catch (e) {
+          console.warn('Failed to decode roster from URL');
+        }
+        return false;
+      }
 
       // --- Image fallback function ---
       window.fallbackImg = function(imgEl) {
@@ -1553,11 +1657,17 @@
       });
 
       // Initialize
+      // Try URL param first; if none, fall back to localStorage
       loadTheme();
-      loadRoster();
-      initPitchGrid();
-      renderRoster();
-      setupDropZones();
+      if (!loadFromUrl()) {
+        loadRoster();
+        initPitchGrid();
+        renderRoster();
+        setupDropZones();
+      } else {
+        initPitchGrid();
+        setupDropZones();
+      }
     })();
   </script>
 </body>
